@@ -40,7 +40,7 @@ class yescoin(basetap):
                 # print(f"{self.name}: {data}")
                 return int(int(data["data"]["coinPoolLeftCount"]) / 10)
         except Exception as e:
-            print(f"{self.name}: {e}")
+            self.bprint(e)
         return 0
     
     
@@ -50,7 +50,7 @@ class yescoin(basetap):
             res = requests.post(url, headers=self.headers, data=str(numcollect), proxies=self.proxy)
             # print(f"{self.name}: {res.json()}")
         except Exception as e:
-            print(f"{self.name}: {e}")
+            self.bprint(e)
 
     def get_info(self):
         url = "https://api.yescoin.gold/account/getAccountInfo"
@@ -59,7 +59,7 @@ class yescoin(basetap):
             self.print_balance(res.json()['data']['currentAmount'])
             # print(f"{self.name}: Account balance {res.json()['data']['currentAmount']}")
         except Exception as e:
-            print(f"{self.name}: {e}")
+            self.bprint(e)
 
     def run(self):
         while self.stopped == False:

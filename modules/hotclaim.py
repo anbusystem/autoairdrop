@@ -65,4 +65,4 @@ class hotclaim(basetap):
             data = response.json()
             self.print_balance(data['hot_in_storage'])
         except Exception as e:
-            print(e)
+            self.bprint(e)

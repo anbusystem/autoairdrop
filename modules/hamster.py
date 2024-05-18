@@ -50,7 +50,7 @@ class hamster(basetap):
             # print(f"{self.name}: Account balance: {data['clickerUser']['balanceCoins']}")
             return data["clickerUser"]["availableTaps"]
         except Exception as e:
-            print(e)
+            self.bprint(e)
             return 1
 
     def run(self):

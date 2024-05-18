@@ -51,4 +51,4 @@ class tapswap(basetap):
             data = response.json()
             self.print_balance(data['player']['shares'])
         except Exception as e:
-            print(e)
+            self.bprint(e)

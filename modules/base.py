@@ -27,6 +27,9 @@ class basetap(threading.Thread):
         else:
             print(f"{self.name}: Account balance {bl}")
 
+    def bprint(self, msg):
+        print(f"{self.name}: {msg}")
+
     def wait(self):
         print(f"{self.name}: wait {self.wait_time}s" )
         sleeped = 0
