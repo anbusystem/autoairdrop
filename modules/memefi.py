@@ -98,9 +98,3 @@ class memefi(basetap):
             self.print_balance(data['data']['telegramGameProcessTapsBatch']['coinsAmount'])
         except Exception as e:
             print(e)
-
-    def run(self):
-        while self.stopped == False:
-            self.tap()
-            self.wait()
-        return

@@ -66,9 +66,3 @@ class hotclaim(basetap):
             self.print_balance(data['hot_in_storage'])
         except Exception as e:
             print(e)
-
-    def run(self):
-        while self.stopped == False:
-            self.tap()
-            self.wait()
-        return

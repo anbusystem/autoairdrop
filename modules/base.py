@@ -33,7 +33,16 @@ class basetap(threading.Thread):
         while sleeped < self.wait_time and self.stopped == False:
             time.sleep(1)
             sleeped = sleeped + 1
-            
+    
+    def tap(self):
+        print("You should implement this function")
 
     def set_proxy(self, proxy):
         self.proxy = proxy
+
+
+    def run(self):
+        while self.stopped == False:
+            self.tap()
+            self.wait()
+        return
