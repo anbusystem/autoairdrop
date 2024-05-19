@@ -15,6 +15,10 @@ class basetap(threading.Thread):
         self.wait_time = TIME_WAIT
         self.name = self.__class__.__name__
         self.oldbalance = 0
+        self.headers = {}
+
+    def update_header(self, k, v):
+        self.headers[k] = v
 
     def stop(self):
         self.stopped = True

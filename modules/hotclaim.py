@@ -1,8 +1,5 @@
+import requests
 from .base import basetap
-import requests
-
-
-import requests
 
 # Define the URL
 url = "https://api0.herewallet.app/api/v1/user/hot/claim"
@@ -66,3 +63,7 @@ class hotclaim(basetap):
             self.print_balance(data['hot_in_storage'])
         except Exception as e:
             self.bprint(e)
+
+if __name__ == "__main__":
+    obj = hotclaim()
+    obj.tap()

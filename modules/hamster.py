@@ -34,12 +34,13 @@ class hamster(basetap):
         self.stopped = False
         self.wait_time = 5
         self.name = self.__class__.__name__
+        self.last_remain = 1
 
-    def tap_and_return_remain(self, count = 1):
+    def tap(self):
         current_time = datetime.datetime.now()
         current_timestamp = int(current_time.timestamp())
         data = {
-            "count": count,
+            "count": self.last_remain,
             "availableTaps": 4433,
             "timestamp": current_timestamp
         }
@@ -52,11 +53,10 @@ class hamster(basetap):
         except Exception as e:
             self.bprint(e)
             return 1
-
+    
     def run(self):
-        remain = 1
         while self.stopped == False:
-            remain = self.tap_and_return_remain(remain)
+            self.last_remain = self.tap()
             self.wait()
         return
             

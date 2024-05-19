@@ -61,9 +61,12 @@ class yescoin(basetap):
         except Exception as e:
             self.bprint(e)
 
+    def tap(self):
+        remain_coin = self.get_remain_coin()
+        self.collect_coin(remain_coin)
+        self.get_info()
+    
     def run(self):
         while self.stopped == False:
-            remain_coin = self.get_remain_coin()
-            self.collect_coin(remain_coin)
-            self.get_info()
+            self.tap()
             self.wait()
