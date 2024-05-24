@@ -26,7 +26,12 @@ def import_all_modules(package, mname):
 
 
 if __name__ == "__main__":
-	mname = "yescoin"
+	proxies = {
+		'http': 'socks5://127.0.0.1:1080',
+		'https': 'socks5h://127.0.0.1:1080'
+	}
+	mname = "memefi"
 	import_all_modules(modules, mname)
 	for t in threads:
+		t.set_proxy(proxies)
 		t.tap()

@@ -1,0 +1,7 @@
+[
+    {"coin" : "hamster", "type" : "authorization", "auth" : "Bearer 17135328889144GZkVJpJhxCCkBjffo6FNgBr2gM4pQTg8TU4ADhWjpJSTHI127AqcYfiDXS3VtgA5624258194"},
+    {"coin" : "hotclaim", "type" : "Authorization", "auth": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQyMjIxMjYsImRpZCI6MjY4NDQ1NTIsImRldmljZSI6bnVsbCwiYWNjb3VudF9pZCI6InJva2JvdHN4eXoudGciLCJkZXZpY2VfaWQiOiIwNWIxNWIyNS03NDliLTRkNDEtOGU4Ny1hNTM1MWRmZjU1MWMiLCJwbGF0Zm9ybSI6InRlbGVncmFtIiwidGltZXN0YW1wIjoxNzEzNDIzOTk0LjAsInZpZXdfb25seSI6ZmFsc2V9.b1CIy0P8XELdqznWOhEGyfxShomq_SvS6IWrG_2exY4"},
+    {"coin" : "memefi", "type" : "authorization", "auth" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2MWI5ODYwYjU0MjNlYWI0MmEwZjNkNSIsInVzZXJuYW1lIjoicm9rYm90c3h5eiJ9LCJzZXNzaW9uSWQiOiI2NjQ4NTVhNTQyYWRmOTQ4ZGNlODA3N2QiLCJzdWIiOiI2NjFiOTg2MGI1NDIzZWFiNDJhMGYzZDUiLCJpYXQiOjE3MTYwMTY1NDksImV4cCI6MTcxNjYyMTM0OX0.E7FkUdCtK1NuyJgoxs4BdShlMtucv_nZBuWCRoBiGLs"},
+    {"coin" : "tapswap", "type" : "Authorization", "auth" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjU2MjQyNTgxOTQsImlhdCI6MTcxNjA4OTQ5MSwiZXhwIjoxNzE2MDkzMDkxfQ.XPDJNCjCdfKCYCG4qG2sbyZ3OxbVHhKu03Dk-m0zDNM"},
+    {"coin" : "yescoin", "type" : "token", "auth" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1NjI0MjU4MTk0IiwiY2hhdElkIjoiNTYyNDI1ODE5NCIsImlhdCI6MTcxNjAxNDAyNiwiZXhwIjoxNzE4NjA2MDI2LCJyb2xlQXV0aG9yaXplcyI6W10sInVzZXJJZCI6MTc4MTYwMDE1NzY2NTUxMzQ3Mn0.lIzwptF434dMYW3x72AJQb7cfcKUCevn62K0RJKey4DJPeiXGItoaTr5T9Q88NJN0Y1AI7nIh5noJf8y2SIwgQ"}
+]

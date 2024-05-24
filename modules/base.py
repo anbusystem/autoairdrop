@@ -20,6 +20,9 @@ class basetap(threading.Thread):
     def update_header(self, k, v):
         self.headers[k] = v
 
+    def set_proxy(self, proxy):
+        self.proxy = proxy
+
     def stop(self):
         self.stopped = True
         print(f"{self.name}: stopped" )
@@ -42,7 +45,7 @@ class basetap(threading.Thread):
             sleeped = sleeped + 1
     
     def tap(self):
-        print("You should implement this function")
+        self.bprint("You should implement this function")
 
     def set_proxy(self, proxy):
         self.proxy = proxy
