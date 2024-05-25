@@ -27,6 +27,9 @@ class basetap(threading.Thread):
         self.stopped = True
         print(f"{self.name}: stopped" )
 
+    def set_name(self, myname):
+        self.name = myname
+
     def print_balance(self, bl):
         if int(bl) > self.oldbalance:
             print_green_line(f"{self.name}: Account balance {bl} ^")

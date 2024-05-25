@@ -49,6 +49,7 @@ def initialized_app():
         print("Exit")
         sys.exit(1)
 
+    cnt = 0
     # Create instances according to config
     for c in config:
         try:
@@ -62,6 +63,8 @@ def initialized_app():
                 else:
                     # Update the auth for instances
                     ins.update_header(c["type"], c["auth"])
+                    ins.set_name(f"{c['coin']}#{cnt}")
+                    cnt = cnt + 1
                     # Save to global threads
                     threads.append(ins)
             else:
@@ -81,6 +84,7 @@ if __name__ == "__main__":
     # Start all the thread
     for t in threads:
         t.start()
+        time.sleep(1)
     # Wait until ctrl+C is press
     while stopped == False:
         time.sleep(1)
