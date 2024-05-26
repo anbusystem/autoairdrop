@@ -41,15 +41,28 @@ def initialized_app():
         try:
             # Import module, make sure module is existed
             importedm = import_one_module(modules, c["coin"])
+           
             if importedm != None:
                 # Create instance from the module
                 ins = create_instances(importedm)
+                
                 if ins is None:
                     print(f"Failed to create instance {c['coin']}")
                 else:
-                    # Update the auth for instances
-                    ins.update_header(c["type"], c["auth"])
+                    
                     ins.set_name(f"{c['coin']}#{cnt}")
+
+                    if "type" in c:
+                        # Update the auth for instances
+                        ins.update_header(c["type"], c["auth"])
+                        ins.bprint("Authorization imported")
+
+                    if "initdata" in c:
+                        # Update telegram data
+                        ins.parse_init_data_raw(c["initdata"])
+                        ins.bprint("Initdata imported")
+
+                    
                     cnt = cnt + 1
                     # Save to global threads
                     threads.append(ins)

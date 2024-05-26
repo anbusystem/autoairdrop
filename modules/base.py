@@ -1,5 +1,7 @@
 import threading
 import time
+import json
+import urllib.parse
 
 TIME_WAIT = 10
 
@@ -16,6 +18,35 @@ class basetap(threading.Thread):
         self.name = self.__class__.__name__
         self.oldbalance = 0
         self.headers = {}
+        self.init_data = {}
+        self.init_data_raw = ""
+        self.init_data_load = False
+
+    def parse_init_data(self, initdata):
+        initstr = ""
+        data = initdata.split("&")
+        for d in data:
+            k,v = d.split("=")
+            self.init_data[k] = v
+            initstr += k + "=" + urllib.parse.quote(v, safe='') + "&"
+        self.init_data_raw = initstr
+        self.init_data_load = True
+    
+    def parse_init_data_raw(self, rawdata):
+        data = rawdata.split("&")
+        for d in data:
+            try:
+                k,v = d.split("=")
+                if k == "user":
+                    v = json.loads(urllib.parse.unquote(v))
+                self.init_data[k] = v
+            except Exception as e:
+                pass
+        self.init_data_raw = rawdata
+        self.init_data_load = True
+
+    def is_init_data_ready(self):
+        return self.init_data_load
 
     def update_header(self, k, v):
         self.headers[k] = v
@@ -59,3 +90,17 @@ class basetap(threading.Thread):
             self.tap()
             self.wait()
         return
+    
+if __name__ == "__main__":
+    obj = basetap()
+    data_raw = "query_id=AAGSXjtPAgAAAJJeO0_2-sHt&user=%7B%22id%22%3A5624258194%2C%22first_name%22%3A%22Evis%22%2C%22last_name%22%3A%22The%20Cat%22%2C%22username%22%3A%22rokbotsxyz%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1716722443&hash=40fe84e8f626ff0fa74c3f0e7c51c677fac5da8b27a0fc8ddd0fb5cdc5ace2a3"
+    data = data_raw.split("&")
+    init_data = {}
+    for d in data:
+        k,v = d.split("=")
+        
+        if k == "user":
+            v = json.loads(urllib.parse.unquote(v))
+        
+        init_data[k] = v
+    print(init_data["user"]["id"])
