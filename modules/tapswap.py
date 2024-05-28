@@ -42,7 +42,7 @@ class tapswap(basetap):
     def login(self):
         url = "https://api.tapswap.ai/api/account/login"
         body = {
-            "init_data": "query_id=AAGSXjtPAgAAAJJeO08e-d2Q&user=%7B%22id%22%3A5624258194%2C%22first_name%22%3A%22Evis%22%2C%22last_name%22%3A%22The%20Cat%22%2C%22username%22%3A%22rokbotsxyz%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1716089488&hash=ba05d58996c1e60ebbe10e126fc7bf0a3f1c7a70ba98c8d2a368d0e5bd97b251",
+            "init_data": self.init_data_raw,
             "referrer": "",
             "bot_key": "app_bot_1"
         }
