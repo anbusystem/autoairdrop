@@ -1,4 +1,4 @@
-from base import basetap
+from .base import basetap
 import requests
 from datetime import datetime
 import time
