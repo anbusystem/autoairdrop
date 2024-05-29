@@ -43,16 +43,16 @@ For support, join telegram  [Tele Airdrop Script](https://t.me/teleairdropscript
 
 | Bot/Token name  | Script name  | Ref-link | Status |
 | :------------ |:---------------:| -----:| -----: |
-| Yes coin      | yescoin.py |  |  Working |
-| Tapswap      | tapswap.py |  |  Working |
-| Memefi      | memefi.py |  |  Working |
-| Hamster Kombat      | hamster.py |  |  Working |
-| CEX IO Tap      | cexio.py |  |  Working |
-| Cell coin      | cellcoin.py |  |  Working |
+| Yes coin      | yescoin.py | https://t.me/theYescoin_bot/Yescoin?startapp=zNqNe6 |  Working |
+| Tapswap      | tapswap.py | https://t.me/tapswap_mirror_2_bot?start=r_5624258194 |  Working |
+| Memefi      | memefi.py | https://t.me/memefi_coin_bot?start=r_e152eb67a1 |  Working |
+| Hamster Kombat      | hamster.py | https://t.me/hamster_kombat_bot?start=kentId5624258194  |  Working |
+| CEX IO Tap      | cexio.py | https://t.me/cexio_tap_bot?start=1716560687385300 |  Working |
+| Cell coin      | cellcoin.py | https://t.me/cellcoin_bot?start=5624258194 |  Working |
 | Blump coin      | blump.py |  |  Plan |
-| Seed coin      | seed.py |  |  Plan |
+| Seed coin      | seed.py | t.me/seed_coin_bot/app?startapp=5624258194 |  Plan |
 | VivaFtn      | seed.py |  |  Not support |
-| Hot coin      | hotclaimnear.py |  |  Working |
+| Hot coin      | hotclaimnear.py | https://t.me/herewalletbot/app?startapp=4222126 |  Working |
 
 
 
