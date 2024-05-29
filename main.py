@@ -6,7 +6,7 @@ import pkgutil
 import modules
 import inspect
 import json
-from moduleutils import *
+from utils import *
 
 
 threads = []
