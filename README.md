@@ -50,7 +50,7 @@ For support, join telegram  [Tele Airdrop Script](https://t.me/teleairdropscript
 | CEX IO Tap      | cexio.py | https://t.me/cexio_tap_bot?start=1716560687385300 |  Working |
 | Cell coin      | cellcoin.py | https://t.me/cellcoin_bot?start=5624258194 |  Working |
 | Blump coin      | blump.py |  |  Plan |
-| Seed coin      | seed.py | t.me/seed_coin_bot/app?startapp=5624258194 |  Plan |
+| Seed coin      | seed.py | https://t.me/seed_coin_bot/app?startapp=5624258194 |  Plan |
 | VivaFtn      | seed.py |  |  Not support |
 | Hot coin      | hotclaimnear.py | https://t.me/herewalletbot/app?startapp=4222126 |  Working |
 
