@@ -48,9 +48,32 @@ class tapswap(basetap):
         self.headers = headers
         # self.headers["Authorization"] = auth
         self.stopped = False
-        self.wait_time = 5
+        self.wait_time = 5*60
         self.name = self.__class__.__name__
         self.energy = 2000
+        self.remain_boost = {"energy" : 0, "turbo" : 0}
+
+    def apply_boost(self, boosttype):
+        url = "https://api.tapswap.ai/api/player/apply_boost"
+        if self.remain_boost[boosttype] > 0:
+            body = {
+                "type" : boosttype
+            }
+            try:
+                response = requests.post(url, headers=self.headers, json=body, proxies=self.proxy)
+                data = response.json()
+                if "statusCode" in data:
+                    self.bprint(f"Try to claim boost {boosttype} but failed {data['message']}")
+                    return False
+                else:
+                    self.bprint(f"Claim boost {boosttype} success")
+                return True
+            except Exception as e:
+                self.bprint(f"Some thing wrong {e}")
+                return False
+        else:
+            self.bprint("No more boost")
+            return False
 
     def login(self):
         url = "https://api.tapswap.ai/api/account/login"
@@ -62,12 +85,13 @@ class tapswap(basetap):
         try:
             response = requests.post(url, headers=self.headers, json=body, proxies=self.proxy)
             data = response.json()
-            print(data)
             if "access_token" in data:
                 self.auth = f"Bearer {data['access_token']}"
                 self.update_header("Authorization", self.auth)
                 self.bprint("Login success")
                 self.energy = int(data['player']['energy'])
+                self.remain_boost["energy"] = int(data['player']['boost'][0]['cnt'])
+                self.remain_boost["turbo"] = int(data['player']['boost'][1]['cnt'])
                 self.tap(fromlogin=True)
                 return True
             self.bprint("Login failed")
@@ -89,6 +113,8 @@ class tapswap(basetap):
             "time": epoch_ms 
         }
         try:
+            self.apply_boost("energy")
+            self.apply_boost("turbo")
             response = requests.post(url, headers=self.headers, json=data, proxies=self.proxy)
             data = response.json()
             if "statusCode" in data:
@@ -101,8 +127,16 @@ class tapswap(basetap):
             else:
                 self.print_balance(data['player']['shares'])
                 self.energy = 10
+                self.remain_boost["energy"] = int(data['player']['boost'][0]['cnt'])
+                self.remain_boost["turbo"] = int(data['player']['boost'][1]['cnt'])
         except Exception as e:
             self.bprint(e)
+
+    def run(self):
+        while self.stopped == False:
+            self.tap()
+            self.wait()
+        return
 
 
 if __name__ == "__main__":
