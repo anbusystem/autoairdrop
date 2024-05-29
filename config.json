@@ -1,7 +1,31 @@
-[
-    {"coin" : "cellcoin", "initdata" : "user=%7B%22id%22%3A5624258194%2C%22first_name%22%3A%22Evis%22%2C%22last_name%22%3A%22The%20Cat%22%2C%22username%22%3A%22rokbotsxyz%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=-1610386127424635901&chat_type=sender&start_param=6744843167&auth_date=1716820801&hash=7e2e27974f9ed5495d7405e923e07eb1aa87ca602391af6d30c76895bcc91e5b"},
-    {"coin" : "cexio", "initdata" : "query_id=AAGSXjtPAgAAAJJeO09dbVGu&user=%7B%22id%22%3A5624258194%2C%22first_name%22%3A%22Evis%22%2C%22last_name%22%3A%22The%20Cat%22%2C%22username%22%3A%22rokbotsxyz%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1716720848&hash=4e04e36a8f6b01e10cb60affe69f40b19a029cd2e515e0213a133b19b68a3a84"},
-    {"coin" : "hamster", "type" : "authorization", "auth" : "Bearer 17135328889144GZkVJpJhxCCkBjffo6FNgBr2gM4pQTg8TU4ADhWjpJSTHI127AqcYfiDXS3VtgA5624258194"},
-    {"coin" : "tapswap", "initdata" : "query_id=AAGSXjtPAgAAAJJeO0_t0i5G&user=%7B%22id%22%3A5624258194%2C%22first_name%22%3A%22Evis%22%2C%22last_name%22%3A%22The%20Cat%22%2C%22username%22%3A%22rokbotsxyz%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1716909225&hash=109f0f7fbe349f2d9e6e563734735131a56bc9942955c5e162352d5a7bbad9fe", "type" : "Authorization", "auth" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjU2MjQyNTgxOTQsImlhdCI6MTcxNjA4OTQ5MSwiZXhwIjoxNzE2MDkzMDkxfQ.XPDJNCjCdfKCYCG4qG2sbyZ3OxbVHhKu03Dk-m0zDNM"},
-    {"coin" : "yescoin", "type" : "token", "auth" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1NjI0MjU4MTk0IiwiY2hhdElkIjoiNTYyNDI1ODE5NCIsImlhdCI6MTcxNjAxNDAyNiwiZXhwIjoxNzE4NjA2MDI2LCJyb2xlQXV0aG9yaXplcyI6W10sInVzZXJJZCI6MTc4MTYwMDE1NzY2NTUxMzQ3Mn0.lIzwptF434dMYW3x72AJQb7cfcKUCevn62K0RJKey4DJPeiXGItoaTr5T9Q88NJN0Y1AI7nIh5noJf8y2SIwgQ"}
-]
+{
+	"accounts" : [
+			{"coin" : "cellcoin", "initdata" : "user=%7B%22id%22%3A5624258194%2C%22first_name%22%3A%22Evis%22%2C%22last_name%22%3A%22The%20Cat%22%2C%22username%22%3A%22rokbotsxyz%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=-1610386127424635901&chat_type=sender&start_param=6744843167&auth_date=1716820801&hash=7e2e27974f9ed5495d7405e923e07eb1aa87ca602391af6d30c76895bcc91e5b"},
+			{"coin" : "cexio", "initdata" : "query_id=AAGSXjtPAgAAAJJeO09dbVGu&user=%7B%22id%22%3A5624258194%2C%22first_name%22%3A%22Evis%22%2C%22last_name%22%3A%22The%20Cat%22%2C%22username%22%3A%22rokbotsxyz%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1716720848&hash=4e04e36a8f6b01e10cb60affe69f40b19a029cd2e515e0213a133b19b68a3a84"},
+			{"coin" : "hamster", "type" : "authorization", "auth" : "Bearer 17135328889144GZkVJpJhxCCkBjffo6FNgBr2gM4pQTg8TU4ADhWjpJSTHI127AqcYfiDXS3VtgA5624258194"},
+			{"coin" : "tapswap", "initdata" : "query_id=AAGSXjtPAgAAAJJeO0_t0i5G&user=%7B%22id%22%3A5624258194%2C%22first_name%22%3A%22Evis%22%2C%22last_name%22%3A%22The%20Cat%22%2C%22username%22%3A%22rokbotsxyz%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1716909225&hash=109f0f7fbe349f2d9e6e563734735131a56bc9942955c5e162352d5a7bbad9fe", "type" : "Authorization", "auth" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjU2MjQyNTgxOTQsImlhdCI6MTcxNjA4OTQ5MSwiZXhwIjoxNzE2MDkzMDkxfQ.XPDJNCjCdfKCYCG4qG2sbyZ3OxbVHhKu03Dk-m0zDNM"},
+			{"coin" : "yescoin", "type" : "token", "auth" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1NjI0MjU4MTk0IiwiY2hhdElkIjoiNTYyNDI1ODE5NCIsImlhdCI6MTcxNjAxNDAyNiwiZXhwIjoxNzE4NjA2MDI2LCJyb2xlQXV0aG9yaXplcyI6W10sInVzZXJJZCI6MTc4MTYwMDE1NzY2NTUxMzQ3Mn0.lIzwptF434dMYW3x72AJQb7cfcKUCevn62K0RJKey4DJPeiXGItoaTr5T9Q88NJN0Y1AI7nIh5noJf8y2SIwgQ"}
+	],
+	"proxy" : {
+		"proxyfile" : "proxy.txt",
+		"proxytype" : "socks5",
+		"proxymode" : "ROT",
+		"proxymodedesc" : {
+			"ROT" : "Rotation from the proxy file",
+			"TBD" : "To be update, not use this now"
+		},
+		"proxydie" : "STOP",
+		"proxydiedesc" : {
+			"STOP" : "STOP the program",
+			"SKIP" : "Skip that proxy and get the next proxy, all die then stop"
+		}
+	},
+	"thread" : {
+		"threadmode" : "SPAWN_ALL",
+		"threadmodedesc" : {
+			"SPAWN_ALL" : "Spawn all threads according to number of account",
+			"THREAD_POOL" : "Spawn a <thread_number> and only use it to execute auto click"
+		},
+		"thread_number" : 20
+	}
+}
