@@ -52,8 +52,9 @@ class tapswap(basetap):
         self.name = self.__class__.__name__
         self.energy = 2000
         self.remain_boost = {"energy" : 0, "turbo" : 0}
+        self.last_boost_time = {"energy" : 0, "turbo" : 0}
 
-    def apply_boost(self, boosttype):
+    def apply_boost(self, boosttype, curtime):
         url = "https://api.tapswap.ai/api/player/apply_boost"
         if self.remain_boost[boosttype] > 0:
             body = {
@@ -67,6 +68,7 @@ class tapswap(basetap):
                     self.wait_time = 5*60
                     return False
                 else:
+                    self.last_boost_time[boosttype] = curtime
                     self.bprint(f"Claim boost {boosttype} success")
                     self.wait_time = 1
                 return True
@@ -118,7 +120,7 @@ class tapswap(basetap):
         }
         try:
             self.apply_boost("energy")
-            self.apply_boost("turbo")
+            # self.apply_boost("turbo")
             response = requests.post(url, headers=self.headers, json=data, proxies=self.proxy)
             data = response.json()
             if "statusCode" in data:
