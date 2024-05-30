@@ -64,15 +64,19 @@ class tapswap(basetap):
                 data = response.json()
                 if "statusCode" in data:
                     self.bprint(f"Try to claim boost {boosttype} but failed {data['message']}")
+                    self.wait_time = 5*60
                     return False
                 else:
                     self.bprint(f"Claim boost {boosttype} success")
+                    self.wait_time = 1
                 return True
             except Exception as e:
                 self.bprint(f"Some thing wrong {e}")
+                self.wait_time = 5*60
                 return False
         else:
             self.bprint("No more boost")
+            self.wait_time = 5*60
             return False
 
     def login(self):
