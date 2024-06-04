@@ -22,6 +22,9 @@ class basetap(threading.Thread):
         self.init_data_raw = ""
         self.init_data_load = False
 
+    def set_params(self, params):
+        self.bprint("You should implement the set params function")
+
     def parse_init_data(self, initdata):
         initstr = ""
         data = initdata.split("&")
