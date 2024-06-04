@@ -5,27 +5,23 @@ import time
 import struct
 
 DEFAULT_HEADERS = {
-    "Accept": "*/*",
-    "Accept-Encoding": "gzip, deflate, br, zstd",
-    "Accept-Language": "en-US,en;q=0.9,vi;q=0.8",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjU2MjQyNTgxOTQsImlhdCI6MTcxNjkwOTI0NywiZXhwIjoxNzE2OTEyODQ3fQ.IO35nSuv6-R3zgR9UB7-j6X7sjGM9wJ8Nj6ujZT91-0",
-    "Content-Id": "5623748576",
-    "DNT": "1",
-    "Origin": "https://app.tapswap.club",
-    "Referer": "https://app.tapswap.club/",
-    "Sec-Fetch-Dest": "empty",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Site": "cross-site",
-    "sec-ch-ua": "\"Microsoft Edge\";v=\"125\", \"Chromium\";v=\"125\", \"Not.A/Brand\";v=\"24\"",
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": "\"Windows\"",
-    "x-app": "tapswap_server",
-    "x-cv": "607",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0",
-    "Content-Type": "application/json"
+    'Host': 'api.tapswap.ai',
+    'x-cv': '608',
+    'Accept': '*/*',
+    'Sec-Fetch-Site': 'cross-site',
+    'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
+    'Sec-Fetch-Mode': 'cors',
+    'Origin': 'https://app.tapswap.club',
+    'x-bot': 'no',
+    'x-app': 'tapswap_server',
+    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
+    'Referer': 'https://app.tapswap.club/',
+    'Sec-Fetch-Dest': 'empty',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/json',
 }
 
-DEFAULT_AUTH = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjU2MjQyNTgxOTQsImlhdCI6MTcxNjkwOTI0NywiZXhwIjoxNzE2OTEyODQ3fQ.IO35nSuv6-R3zgR9UB7-j6X7sjGM9wJ8Nj6ujZT91-0"
+DEFAULT_AUTH = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjExNDM4MDQ3MzYsImlhdCI6MTcxNzE0MDE3MSwiZXhwIjoxNzE3MTQzNzcxfQ.1YMCqeIdK_fxfKqCLFe3SC_e6E3iOmh2dsyw3d16358"
 # DEFAULT_AUTH = ""
 def to_js_float64(value):
     """Convert a large integer to a float64 representation, simulating JavaScript precision issues."""
@@ -112,12 +108,13 @@ class tapswap(basetap):
         self.update_content_id(epoch_ms)
         data = {
             "taps": self.energy,
-            "time": epoch_ms 
+            "time": epoch_ms
         }
         try:
-            self.apply_boost("energy")
+            self.apply_boost("energy", epoch_ms)
             # self.apply_boost("turbo")
             response = requests.post(url, headers=self.headers, json=data, proxies=self.proxy)
+
             data = response.json()
             if "statusCode" in data:
                 if fromlogin:
