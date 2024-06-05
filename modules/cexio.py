@@ -62,7 +62,7 @@ class cexio(basetap):
         response = requests.post(url, headers=self.headers, json=data)
 
     
-    def tap(self):
+    def claim(self):
         if not self.is_init_data_ready():
             self.bprint("Init data is required, please check config.json")
         else:

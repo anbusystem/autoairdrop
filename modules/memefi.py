@@ -91,7 +91,7 @@ class memefi(basetap):
         self.wait_time = 5
         self.name = self.__class__.__name__
 
-    def tap(self):
+    def claim(self):
         try:
             response = requests.post(url, headers=self.headers, json=body, proxies=self.proxy)
             data = response.json()

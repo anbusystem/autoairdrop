@@ -80,7 +80,7 @@ class tapswap(basetap):
         contentid = int(js_modulo(myid, now))
         self.update_header("Content-Id", str(contentid))
 
-    def tap(self, fromlogin = False):
+    def claim(self, fromlogin = False):
         current_time_seconds = time.time()
         epoch_ms = int(current_time_seconds * 1000)
         self.update_content_id(epoch_ms)

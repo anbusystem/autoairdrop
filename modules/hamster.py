@@ -36,7 +36,7 @@ class hamster(basetap):
         self.name = self.__class__.__name__
         self.last_remain = 1
 
-    def tap(self):
+    def claim(self):
         current_time = datetime.datetime.now()
         current_timestamp = int(current_time.timestamp())
         data = {
@@ -53,10 +53,3 @@ class hamster(basetap):
         except Exception as e:
             self.bprint(e)
             return 1
-    
-    def run(self):
-        while self.stopped == False:
-            self.last_remain = self.tap()
-            self.wait()
-        return
-            

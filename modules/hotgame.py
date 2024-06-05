@@ -124,19 +124,18 @@ class hotgame(basetap):
             self.wait_time = int(self.wait_time / 1000000000) + 20
             self.bprint(f"Not time to claim yet. Waiting {self.wait_time} seconds")
 
-    def claim(self):
+    def claim_(self):
         response = requests.post(url, headers=self.headers, json=self.body)
         print(response.json())
         pass
 
-    def tap(self):
+    def claim(self):
         self.get_account_info()
         print(self.body["game_state"])
         self.get_wait_time_until_claim()
         if self.wait_time == 0:
-            self.claim()
-        print(self.wait_time)
-
+            self.claim_()
+            self.wait_time = 10
 
 
 
