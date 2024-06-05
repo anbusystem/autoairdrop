@@ -4,16 +4,13 @@
 A simple application written in Python with requests library to achieve the smooth airdrop claim/click on telegram without needed of open telegram bot app (web app) on the phone or PC
 
 
-
-
 ## Features
 
 - Auto claim for popular airdrop app like: yescoin, tapswap, cexio...
 - With proxy support
-- Auto claim hot coin using NEAR transaction API
 - Cross platform, run anywhere 
 - Very light weight and friendly framework
-
+- Config helper to generate config.json with friendly UI
 
 ## Installation
 
@@ -21,19 +18,9 @@ For claiming of normal coins using requests, you need to have python install on 
 
 ```bash
   cd autoairdrop
-  pip install requests
+  pip install -r requirements.txt
   python main.py
 ```
-
-For claiming of hot coin on near wallet, you need also the python and remember to edit hotnear.json to put your account id and privatekey
-
-```bash
-  cd autoairdrop
-  pip install -r requirements
-  python onlyhotcoin.py
-```
-
-In case you meet error when run the pip install, please raise an issue and put your telegram account so I can support
 ## Support
 
 For support, join telegram  [Tele Airdrop Script](https://t.me/teleairdropscript)
