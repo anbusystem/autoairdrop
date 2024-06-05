@@ -62,7 +62,13 @@ class seed(basetap):
             response = requests.get(url, headers=self.headers)
             data = response.json()
 
-            self.get_next_waiting_time(data["data"]["last_claim"], data["data"]["upgrades"][0]["upgrade_level"])
+            storages = list(filter(lambda storage: storage['upgrade_type'] == 'storage-size', data["data"]["upgrades"]))
+            if storages:
+                highest_storage_level = max(storages, key=lambda storage: storage['upgrade_level'], default={})['upgrade_level']
+            else:
+                highest_storage_level = 0
+
+            self.get_next_waiting_time(data["data"]["last_claim"], highest_storage_level)
             if self.wait_time > 0:
                 self.print_waiting_time()
         except Exception as e:
