@@ -62,6 +62,7 @@ class worker(threading.Thread):
 					ins.parse_config(self.params)
 					ins.claim()
 					if self.cb:
+						print(f"Waing {ins.wait_time} seconds for next run")
 						self.cb(ins.wait_time, self.params)
 					self.release_lock()
 			except Exception as e:

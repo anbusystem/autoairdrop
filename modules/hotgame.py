@@ -83,8 +83,10 @@ class hotgame(basetap):
             self.bprint(f"Unknown storage level {storagelvl}, Falseback to 2 hours")
             return 2
 
-    def set_acc_id(self, accid):
-        self.acc_id = accid
+    def parse_config(self, cline):
+        self.acc_id = cline["accid"]
+        self.update_header("Authorization", cline["Authorization"])
+        self.update_header("Telegram-Data", cline["Telegram-Data"])
 
     def get_account_info(self):
         if self.acc_id is None:
@@ -110,33 +112,35 @@ class hotgame(basetap):
             except Exception as e:
                 self.bprint(e)
 
-    def get_wait_time_until_claim(self):
+    def ready_to_claim(self):
         if self.last_claim is None:
             self.bprint("Look like the code is wrong")
         storage_fill_time = self.storage_to_hours(self.body["game_state"]["storage"])
         storage_fill_time = storage_fill_time * 60 * 60 * 1000000000 # Convert to Nano second
         current_time = time.time_ns()
         self.wait_time = (int(self.last_claim) + int(storage_fill_time)) - current_time
+        print(self.wait_time)
         if self.wait_time < 0:
-            self.wait_time = 0
+            self.wait_time = int(storage_fill_time / 1000000000) + 20
             self.bprint("Time to claim, call claim function")
+            return True
         else:
             self.wait_time = int(self.wait_time / 1000000000) + 20
             self.bprint(f"Not time to claim yet. Waiting {self.wait_time} seconds")
+            return False
 
     def claim_(self):
-        response = requests.post(url, headers=self.headers, json=self.body)
-        print(response.json())
+        # response = requests.post(url, headers=self.headers, json=self.body)
+        # print(response.json())
         pass
 
     def claim(self):
         self.get_account_info()
         print(self.body["game_state"])
-        self.get_wait_time_until_claim()
-        if self.wait_time == 0:
+        if self.ready_to_claim():
             self.claim_()
-            self.wait_time = 10
 
+    
 
 
 if __name__ == "__main__":

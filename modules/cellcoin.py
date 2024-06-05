@@ -88,15 +88,12 @@ class cellcoin(basetap):
         except Exception as e:
             self.bprint(e)
 
-    
+    def parse_config(self, cline):
+        self.update_header("Authorization", cline["Authorization"])
+
     def claim(self):
-        if not self.is_init_data_ready():
-            self.bprint("Init data is required, please check config.json")
-            return
-        else:
-            self.headers["Authorization"] = self.init_data_raw
-            self.get_balance_and_remain_time()
-            if self.wait_time <= 0:
-                self.try_claim()
+        self.get_balance_and_remain_time()
+        if self.wait_time <= 0:
+            self.try_claim()
                 
             

@@ -57,7 +57,7 @@ class tapswap(basetap):
         body = {
             "init_data": self.init_data_raw,
             "referrer": "",
-            "bot_key": "app_bot_1"
+            "bot_key": "app_bot_0"
         }
         try:
             response = requests.post(url, headers=self.headers, json=body, proxies=self.proxy)
@@ -79,6 +79,10 @@ class tapswap(basetap):
         myid = self.init_data["user"]["id"]
         contentid = int(js_modulo(myid, now))
         self.update_header("Content-Id", str(contentid))
+    
+    def parse_config(self, cline):
+        self.update_header("Authorization", cline["Authorization"])
+        self.parse_init_data_raw(cline["init_data"])
 
     def claim(self, fromlogin = False):
         current_time_seconds = time.time()

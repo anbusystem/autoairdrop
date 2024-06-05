@@ -27,57 +27,7 @@ DEFAULT_HEADERS = {
 }
 DEFAULT_AUTH = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2MWI5ODYwYjU0MjNlYWI0MmEwZjNkNSIsInVzZXJuYW1lIjoicm9rYm90c3h5eiJ9LCJzZXNzaW9uSWQiOiI2NjQ4NTVhNTQyYWRmOTQ4ZGNlODA3N2QiLCJzdWIiOiI2NjFiOTg2MGI1NDIzZWFiNDJhMGYzZDUiLCJpYXQiOjE3MTYwMTY1NDksImV4cCI6MTcxNjYyMTM0OX0.E7FkUdCtK1NuyJgoxs4BdShlMtucv_nZBuWCRoBiGLs"
 # Define the JSON body
-body = {
-    "operationName": "MutationGameProcessTapsBatch",
-    "variables": {
-        "payload": {
-            "nonce": "cb467f0785fa0e8e62a55c1614b7d1c8084036d74f014422bfe799b8ead7ae67",
-            "tapsCount": 20
-        }
-    },
-    "query": """
-        mutation MutationGameProcessTapsBatch($payload: TelegramGameTapsBatchInput!) {
-            telegramGameProcessTapsBatch(payload: $payload) {
-                ...FragmentBossFightConfig
-                __typename
-            }
-        }
-        fragment FragmentBossFightConfig on TelegramGameConfigOutput {
-            _id
-            coinsAmount
-            currentEnergy
-            maxEnergy
-            weaponLevel
-            energyLimitLevel
-            energyRechargeLevel
-            tapBotLevel
-            currentBoss {
-                _id
-                level
-                currentHealth
-                maxHealth
-                __typename
-            }
-            freeBoosts {
-                _id
-                currentTurboAmount
-                maxTurboAmount
-                turboLastActivatedAt
-                turboAmountLastRechargeDate
-                currentRefillEnergyAmount
-                maxRefillEnergyAmount
-                refillEnergyLastActivatedAt
-                refillEnergyAmountLastRechargeDate
-                __typename
-            }
-            bonusLeaderDamageEndAt
-            bonusLeaderDamageStartAt
-            bonusLeaderDamageMultiplier
-            nonce
-            __typename
-        }
-    """
-}
+
 
 
 class memefi(basetap):
@@ -90,11 +40,66 @@ class memefi(basetap):
         self.stopped = False
         self.wait_time = 5
         self.name = self.__class__.__name__
+        self.body = {
+            "operationName": "MutationGameProcessTapsBatch",
+            "variables": {
+                "payload": {
+                    "nonce": "cb467f0785fa0e8e62a55c1614b7d1c8084036d74f014422bfe799b8ead7ae67",
+                    "tapsCount": 20
+                }
+            },
+            "query": """
+                mutation MutationGameProcessTapsBatch($payload: TelegramGameTapsBatchInput!) {
+                    telegramGameProcessTapsBatch(payload: $payload) {
+                        ...FragmentBossFightConfig
+                        __typename
+                    }
+                }
+                fragment FragmentBossFightConfig on TelegramGameConfigOutput {
+                    _id
+                    coinsAmount
+                    currentEnergy
+                    maxEnergy
+                    weaponLevel
+                    energyLimitLevel
+                    energyRechargeLevel
+                    tapBotLevel
+                    currentBoss {
+                        _id
+                        level
+                        currentHealth
+                        maxHealth
+                        __typename
+                    }
+                    freeBoosts {
+                        _id
+                        currentTurboAmount
+                        maxTurboAmount
+                        turboLastActivatedAt
+                        turboAmountLastRechargeDate
+                        currentRefillEnergyAmount
+                        maxRefillEnergyAmount
+                        refillEnergyLastActivatedAt
+                        refillEnergyAmountLastRechargeDate
+                        __typename
+                    }
+                    bonusLeaderDamageEndAt
+                    bonusLeaderDamageStartAt
+                    bonusLeaderDamageMultiplier
+                    nonce
+                    __typename
+                }
+            """
+        }
 
     def claim(self):
         try:
-            response = requests.post(url, headers=self.headers, json=body, proxies=self.proxy)
+            response = requests.post(url, headers=self.headers, json=self.body, proxies=self.proxy)
             data = response.json()
             self.print_balance(data['data']['telegramGameProcessTapsBatch']['coinsAmount'])
         except Exception as e:
             self.bprint(e)
+    
+    def parse_config(self, cline):
+        self.update_header("authorization", cline["authorization"])
+        self.body["variables"]["payload"]["nonce"] = cline["nonce"]

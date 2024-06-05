@@ -102,7 +102,12 @@
                 const templateData = { coin: selectedTemplate };
                 row.querySelectorAll('.form-control').forEach(input => {
                     if (input.value) {
-                        templateData[input.id.split('-')[0]] = input.value;
+                        var field_name = input.id.split('-')
+                        var totalparts = field_name.length;
+                        var key = field_name[0];
+                        for(var i = 1; i < (totalparts -1); i++)
+                            key = key + "-" + field_name[i];
+                        templateData[key] = input.value;
                     }
                 });
                 formData.push(templateData);
@@ -110,7 +115,32 @@
         });
 
         console.log('Form Data:', JSON.stringify(formData));
+        saveConfigFile(JSON.stringify(formData));
     });
+
+    function saveConfigFile(jsonString) {
+        // Create a Blob from the JSON string
+        const blob = new Blob([jsonString], { type: 'application/json' });
+
+        // Create a link element
+        const link = document.createElement('a');
+
+        // Set the link's href to point to the Blob
+        link.href = URL.createObjectURL(blob);
+
+        // Set the download attribute to specify the file name
+        link.download = 'config.json';
+
+        // Append the link to the body (it's not visible, but needed for the download)
+        document.body.appendChild(link);
+
+        // Programmatically click the link to trigger the download
+        link.click();
+
+        // Remove the link from the document
+        document.body.removeChild(link);
+    }
+
 
     function deleteRow(rowIndex) {
         const dynamicRows = document.getElementById('dynamicRows');

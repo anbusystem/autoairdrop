@@ -2,6 +2,7 @@ import queue
 import time
 import threading
 import signal
+import json
 import sys
 from worker import worker
 
@@ -57,6 +58,7 @@ def initialized_app():
 
 
 if __name__ == "__main__":
+    signal.signal(signal.SIGINT, signal_handler)
     initialized_app()
     for t in threads:
         t.start()
@@ -66,4 +68,4 @@ if __name__ == "__main__":
     
     for t in threads:
         t.stop()
-        t.join()
+        # t.join()

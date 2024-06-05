@@ -36,6 +36,9 @@ class hamster(basetap):
         self.name = self.__class__.__name__
         self.last_remain = 1
 
+    def parse_config(self, cline):
+        self.update_header("authorization", cline["authorization"])
+
     def claim(self):
         current_time = datetime.datetime.now()
         current_timestamp = int(current_time.timestamp())

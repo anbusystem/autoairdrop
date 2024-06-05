@@ -65,3 +65,6 @@ class yescoin(basetap):
         remain_coin = self.get_remain_coin()
         self.collect_coin(remain_coin)
         self.get_info()
+
+    def parse_config(self, cline):
+        self.update_header("token", cline["token"])
