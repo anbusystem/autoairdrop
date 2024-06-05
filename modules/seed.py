@@ -62,11 +62,14 @@ class seed(basetap):
             response = requests.get(url, headers=self.headers)
             data = response.json()
 
-            storages = list(filter(lambda storage: storage['upgrade_type'] == 'storage-size', data["data"]["upgrades"]))
-            if storages:
-                highest_storage_level = max(storages, key=lambda storage: storage['upgrade_level'], default={})['upgrade_level']
-            else:
-                highest_storage_level = 0
+            # Extract upgrades from the data source
+            upgrades = data.get("data", {}).get("upgrades", [])
+
+            # Filter storage-size upgrades and find the highest upgrade level
+            highest_storage_level = max(
+                (upgrade['upgrade_level'] for upgrade in upgrades if upgrade.get('upgrade_type') == 'storage-size'),
+                default=0
+            )
 
             self.get_next_waiting_time(data["data"]["last_claim"], highest_storage_level)
             if self.wait_time > 0:
