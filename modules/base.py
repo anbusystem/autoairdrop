@@ -10,9 +10,8 @@ def print_green_line(line):
     RESET = "\033[0m"
     print(f"{GREEN}{line}{RESET}")
 
-class basetap(threading.Thread):
+class basetap:
     def __init__(self):
-        threading.Thread.__init__(self)
         self.stopped = False
         self.wait_time = TIME_WAIT
         self.name = self.__class__.__name__
@@ -22,8 +21,8 @@ class basetap(threading.Thread):
         self.init_data_raw = ""
         self.init_data_load = False
 
-    def set_params(self, params):
-        self.bprint("You should implement the set params function")
+    def parse_config(self, cline):
+        self.bprint("You should implement the parse config function")
 
     def parse_init_data(self, initdata):
         initstr = ""
@@ -81,18 +80,12 @@ class basetap(threading.Thread):
             time.sleep(1)
             sleeped = sleeped + 1
     
-    def tap(self):
+    def claim(self):
         self.bprint("You should implement this function")
 
     def set_proxy(self, proxy):
         self.proxy = proxy
 
-
-    def run(self):
-        while self.stopped == False:
-            self.tap()
-            self.wait()
-        return
     
 if __name__ == "__main__":
     obj = basetap()

@@ -98,4 +98,3 @@ class proxyhelper:
 			self.proxytype = self.cfg.get(CONFIG.PROXY.value, SUBCONFIG.PROXYTYPE.value)
 			self._initialized = True
 	
-	

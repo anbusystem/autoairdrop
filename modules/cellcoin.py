@@ -89,15 +89,14 @@ class cellcoin(basetap):
             self.bprint(e)
 
     
-    def run(self):
+    def claim(self):
         if not self.is_init_data_ready():
             self.bprint("Init data is required, please check config.json")
             return
         else:
             self.headers["Authorization"] = self.init_data_raw
-            while self.stopped == False:   
-                self.get_balance_and_remain_time()
-                self.wait()
-                if self.wait_time <= 0:
-                    self.try_claim()
+            self.get_balance_and_remain_time()
+            if self.wait_time <= 0:
+                self.try_claim()
+                
             

@@ -1,20 +1,35 @@
-import signal
+import queue
 import time
+import threading
+import signal
 import sys
-import importlib
-import pkgutil
-import modules
-import inspect
-import json
-from utils import *
+from worker import worker
 
-
+worker_queue = queue.Queue()
+is_app_running = True
+worker_queue_lock = threading.Lock()
 threads = []
-stopped = False
+max_threads = 5
+# request_locking = threading.Lock()
+request_locking = None
 
 def signal_handler(sig, frame):
-    global stopped
-    stopped = True
+    global is_app_running
+    is_app_running = False
+
+def thread_wait_and_pushback(wait_time, cline):
+    global is_app_running, worker_queue, worker_queue_lock
+    sleeped_time = 0
+    while is_app_running and sleeped_time < wait_time:
+        time.sleep(1)
+        sleeped_time = sleeped_time + 1
+    with worker_queue_lock:
+        worker_queue.put(cline)
+    return
+
+def schedule_new_iteration(wait_time, cline):
+    t = threading.Thread(target=thread_wait_and_pushback, args=(wait_time, cline))
+    t.start()
 
 def load_config():
     with open("config.json") as f:
@@ -27,67 +42,28 @@ def load_config():
     return None
 
 def initialized_app():
-    global threads
-
-    # Load config.json
+    global threads, worker_queue, request_locking, max_threads
     config = load_config()
     if config == None:
         print("Exit")
         sys.exit(1)
 
-    cnt = 0
-    # Create instances according to config
     for c in config:
-        try:
-            # Import module, make sure module is existed
-            importedm = import_one_module(modules, c["coin"])
-           
-            if importedm != None:
-                # Create instance from the module
-                ins = create_instances(importedm)
-                
-                if ins is None:
-                    print(f"Failed to create instance {c['coin']}")
-                else:
-                    
-                    ins.set_name(f"{c['coin']}#{cnt}")
+        worker_queue.put(c)
 
-                    if "type" in c:
-                        # Update the auth for instances
-                        ins.update_header(c["type"], c["auth"])
-                        ins.bprint("Authorization imported")
+    for i in range(0, max_threads):
+        t = worker(worker_queue, schedule_new_iteration, request_locking)
+        threads.append(t)
 
-                    if "initdata" in c:
-                        # Update telegram data
-                        ins.parse_init_data_raw(c["initdata"])
-                        ins.bprint("Initdata imported")
-
-                    
-                    cnt = cnt + 1
-                    # Save to global threads
-                    threads.append(ins)
-            else:
-                print(f"Failed to import module {c['coin']}")
-        except Exception as e:
-            print(e)
-            sys.exit(1)
-
-    # Set up signal handler to catch Ctrl+C
-    signal.signal(signal.SIGINT, signal_handler)
-    
-   
 
 if __name__ == "__main__":
-    # Init all the thread
     initialized_app()
-    # Start all the thread
     for t in threads:
         t.start()
         time.sleep(1)
-    # Wait until ctrl+C is press
-    while stopped == False:
+    while is_app_running:
         time.sleep(1)
-    # Close the main function
+    
     for t in threads:
         t.stop()
-        # t.join()
+        t.join()
