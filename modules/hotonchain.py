@@ -1,7 +1,7 @@
 import requests
 import datetime
 import time
-from base import basetap
+from .base import basetap
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -125,6 +125,8 @@ class hotonchain(basetap):
             self.bprint(f"Not time to claim yet. Waiting {self.wait_time} seconds")
 
     def claim(self):
+        response = requests.post(url, headers=self.headers, json=self.body)
+        print(response.json())
         pass
 
     def tap(self):
@@ -136,10 +138,9 @@ class hotonchain(basetap):
         print(self.wait_time)
 
 
-if __name__ == "__main__":
 
+
+if __name__ == "__main__":
     obj = hotonchain()
-    obj.update_header("Authorization", "yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxx.2uXHhlZOkn5F_Os6Nyqv2XOP0Fjg3NYn9Paulj9_JbU")
-    obj.update_header("Telegram-Data", "xxx")
     obj.set_acc_id("rokbotsxyz.tg")
     obj.tap()
