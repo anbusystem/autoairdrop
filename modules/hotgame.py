@@ -43,7 +43,7 @@ body = {
 
 DEFAULT_AUTH = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxx.5J1KlVcsKpOWRV3h-FwSLQ_J1QlYS_5ibGBbZW_V2Q4"
 
-class hotonchain(basetap):
+class hotgame(basetap):
     def __init__(self, auth = DEFAULT_AUTH, proxy = None, headers = DEFAULT_HEADERS):
         super().__init__()
         self.auth = auth
@@ -141,6 +141,6 @@ class hotonchain(basetap):
 
 
 if __name__ == "__main__":
-    obj = hotonchain()
+    obj = hotgame()
     obj.set_acc_id("rokbotsxyz.tg")
     obj.tap()
