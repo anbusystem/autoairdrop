@@ -85,9 +85,7 @@ class seed(basetap):
             if int(data["data"]["amount"]) > 0:
                 self.bprint("Claim success")
             self.print_balance(float(data["data"]["amount"]))
-            self.get_next_waiting_time(data["data"]["last_claimed_at"], data["user"]["storage_level"])
-            if self.wait_time > 0:
-                self.print_waiting_time()
+            self.get_profile()
         except Exception as e:
             self.bprint(e)
 
