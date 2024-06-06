@@ -30,7 +30,8 @@ class workerhelper:
 			else:
 				print(f"Failed to get proxy {p.value}")
 				return None
-
+		else:
+			return workerhelper.proxy
 
 class worker(threading.Thread):
 	# inqueue: give me a queue, I will get the config line

@@ -1,15 +1,3 @@
-{"coin" : "xyz", 
-	"params" : {
-		"init_data" : "",
-		"headers" : [
-			{"type" : "Authorization", "data" : "xxxx"},
-			{"type" : "Token", "data" : "xxxx"}
-		],
-		"specific_data" : {
-			"game_id" : ""
-		},
-		"proxyurl" : "https://localhost" 
-	}
+{
+	"msg" : "Please use helper/confighelper.html to generate this config.json"
 }
-
-
