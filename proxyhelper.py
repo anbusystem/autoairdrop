@@ -8,10 +8,17 @@ class ProxyMode(Enum):
     PROXY_ROTATION = 0
     PROXY_LIST = 1
     PROXY_FLEX = 2
+    PROXY_DIRECT = 3
 
 class ProxyType(Enum):
     SOCKS = "socks5"
     HTTP = "http"
+
+class ReturnCode(Enum):
+    OK = "LOCAL"
+    FMT = "Format wrong"
+    DIE = "Proxy is dead"
+    EMPT = "No more proxy"
 
 NORMAL_PROXY = 3 # Type, host, port
 AUTH_PROXY = 5 # Type : host : port : user : pass
@@ -72,7 +79,7 @@ class ProxyHelper:
     
     # Check if we support proxy mode or not
     def _is_proxy_mode_valid(self, mode):
-        if mode == ProxyMode.PROXY_ROTATION or mode == ProxyMode.PROXY_LIST:
+        if mode == ProxyMode.PROXY_ROTATION or mode == ProxyMode.PROXY_LIST or mode == ProxyMode.PROXY_DIRECT:
             return True
         return False
 
@@ -140,20 +147,25 @@ class ProxyHelper:
         elif self._is_proxy_mode(ProxyMode.PROXY_LIST):
             proxystr = self._get_next_proxy()
         else:
-            #TODO: New proxy mode add here
-            return None
-        
+            return True, None
+
         if checklive:
             if self.is_proxy_live(proxystr):
-                return self._build_proxy(proxystr)
+                pass
             else:
                 if self._is_proxy_mode(ProxyMode.PROXY_LIST):
                     self.died = self.died + 1
                     if self.died >= len(self.proxies):
                         print("All proxy are dead.")
-
+                        return False, ReturnCode.EMPT
                 return self.get_proxy(checklive)
-        return self._build_proxy(proxystr)
+        proxy = self._build_proxy(proxystr)
+        if proxy == None:
+            return False, ReturnCode.FMT
+        return True, proxy
+    
+    def is_valid_proxy(self, proxy):
+        return self._is_built(proxy)
 
 if __name__ == "__main__":
     obj = ProxyHelper(proxyfile="proxy.txt", proxymode=ProxyMode.PROXY_ROTATION)

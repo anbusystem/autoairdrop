@@ -6,6 +6,30 @@ from utils import *
 import urllib.parse
 import sys
 import queue
+from proxyhelper import ProxyHelper, ProxyMode, ReturnCode
+from globalconfig import *
+
+class workerhelper:
+	proxy = None
+	last_request = 0
+	def __init__(self):
+		pass
+
+	@staticmethod
+	def gen_proxy():
+		if GLOBAL_PROXY_MODE == ProxyMode.PROXY_DIRECT:
+			return None
+		obj = ProxyHelper("config.txt", GLOBAL_PROXY_MODE, GLOBAL_PROXY_TYPE)
+		cur = time.time()
+		if cur > (workerhelper.last_request + GLOBAL_PROXY_GET_DELAY):
+			ret, p = obj.get_proxy()
+			if ret == True:
+				workerhelper.last_request = cur
+				workerhelper.proxy = p
+				return workerhelper.proxy
+			else:
+				print(f"Failed to get proxy {p.value}")
+				return None
 
 
 class worker(threading.Thread):
@@ -23,7 +47,7 @@ class worker(threading.Thread):
 	
 	def stop(self):
 		self.running = False
-
+		
 	def validate_cb(self):
 		if not callable(self.cb):
 			return False
@@ -59,6 +83,8 @@ class worker(threading.Thread):
 				if self.validate_cline(cline):
 					self.acquire_lock()
 					ins = create_instances(import_one_module(modules, self.coin))
+					proxy = workerhelper.gen_proxy()
+					ins.set_proxy(proxy)
 					ins.parse_config(self.params)
 					ins.claim()
 					if self.cb:
