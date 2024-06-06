@@ -25,7 +25,13 @@
         <div class="row mb-3">
             <div class="col text-center">
                 <button type="button" class="btn btn-success" onclick="addRow()">Add Row</button>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Generate</button>
+                <button type="button" class="btn btn-primary" onclick="copyOutput()">Copy</button>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col text-center">
+                <textarea id="output" style="width: 100%;" rows="10"></textarea>
             </div>
         </div>
     </form>
@@ -73,6 +79,18 @@
         }).join('');
     }
 
+    function copyOutput() {
+        var textArea = document.getElementById('output');
+        textArea.select();
+        textArea.setSelectionRange(0, 99999); // For mobile devices
+
+        // Copy the text inside the text area
+        document.execCommand('copy');
+
+        // 
+        alert("Json config has been copied. Past to your config.json")
+    }
+
     function generateFields(selectElement, rowIndex, data = {}) {
         const selectedTemplate = selectElement.value;
         const fieldsContainer = document.getElementById(`fields-${rowIndex}`);
@@ -107,7 +125,10 @@
                         var key = field_name[0];
                         for(var i = 1; i < (totalparts -1); i++)
                             key = key + "-" + field_name[i];
-                        templateData[key] = input.value;
+                        if(key !== "") {
+                            templateData[key] = input.value;
+                        }   
+                        
                     }
                 });
                 formData.push(templateData);
@@ -115,10 +136,11 @@
         });
 
         console.log('Form Data:', JSON.stringify(formData));
-        saveConfigFile(JSON.stringify(formData));
+        saveConfigFile(JSON.stringify(formData, null, '\t'));
     });
 
     function saveConfigFile(jsonString) {
+        document.getElementById('output').value = jsonString;
         // Create a Blob from the JSON string
         const blob = new Blob([jsonString], { type: 'application/json' });
 

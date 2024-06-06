@@ -3,7 +3,8 @@ var configtemplate = [
     {"cexio" : {"init_data" : "Telegram init data"}},
     {"hamster" : {"authorization" : "Authorization data"}},
     {"hotgame" : {"accid" : "Account ID", "Authorization" : "Authorization data", "Telegram-Data" : "Telegram init data"}},
-    {"memefi" : {"authorization" : "Authorization data", "nonce" : "Your nonce number"}},
+    {"memefi" : {"authorization" : "Authorization data"}},
     {"tapswap" : {"Authorization" : "Authorization data", "init_data" : "Telegram init data"}},
-    {"yescoin" : {"token" : "Authorization data"}}
+    {"yescoin" : {"token" : "Authorization data"}},
+    {"blump" : {"Authorization" : "Authorization data"}}
 ]
