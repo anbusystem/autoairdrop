@@ -58,6 +58,7 @@ class blump(basetap):
         try:
             res = requests.get(url, headers=self.headers, proxies=self.proxy)
             data = res.json()
+            print(data)
             if "playPasses" in data:
                 self.print_balance(float(data['availableBalance']))
                 self.remain_play_pass = int(data['playPasses'])
@@ -78,6 +79,15 @@ class blump(basetap):
             return True
 
     def claim_farm(self):
+        url = "https://game-domain.blum.codes/api/v1/farming/claim"
+        try:
+            res = requests.post(url, headers=self.headers)
+            data = res.json()
+            if "availableBalance" in data:
+                self.print_balance(float(data['availableBalance']))
+                self.wait_time = 5
+        except Exception as e:
+            self.bprint(e)
         pass
 
     def parse_config(self, cline):
