@@ -87,7 +87,10 @@ class cexio(basetap):
             data = response.json()
             self.print_balance(float(data["data"]["balance"]))
             self.farm_reward = float(data["data"]["farmReward"])
-            self.update_farm_collect_time(data["data"]["farmStartedAt"], data["data"]["miningEraIntervalInSeconds"])
+            try:
+                self.update_farm_collect_time(data["data"]["farmStartedAt"], data["data"]["miningEraIntervalInSeconds"])
+            except Exception as e:
+                self.bprint(e)
             return data["data"]["availableTaps"]
         except Exception as e:
             self.bprint(e)
