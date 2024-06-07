@@ -19,7 +19,7 @@ class workerhelper:
 	def gen_proxy():
 		if GLOBAL_PROXY_MODE == ProxyMode.PROXY_DIRECT:
 			return None
-		obj = ProxyHelper("proxy.txt", GLOBAL_PROXY_MODE, GLOBAL_PROXY_TYPE)
+		obj = ProxyHelper("proxy.txt", GLOBAL_PROXY_MODE, GLOBAL_PROXY_TYPE, GLOBAL_PROXY_USER_PASS_MODE)
 		cur = time.time()
 		if cur > (workerhelper.last_request + GLOBAL_PROXY_GET_DELAY):
 			ret, p = obj.get_proxy()

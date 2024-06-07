@@ -25,6 +25,26 @@ DEFAULT_HEADER = {
     "sec-fetch-site": "same-site"
 }
 
+UNAUTHORIZED_HDRs = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0",
+    "authority": "game-domain.blum.codes",
+    "method": "POST",
+    "path": "/api/v1/game/play",
+    "scheme": "https",
+    "accept": "application/json, text/plain, */*",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "accept-language": "en-US,en;q=0.9,vi;q=0.8",
+    "dnt": "1",
+    "origin": "https://telegram.blum.codes",
+    "priority": "u=1, i",
+    "sec-ch-ua": '"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"Windows"',
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-site"
+}
+
 class blump(basetap):
     def __init__(self, proxy = None, headers = DEFAULT_HEADER):
         super().__init__()
@@ -34,12 +54,12 @@ class blump(basetap):
         self.wait_time = 20
         self.name = self.__class__.__name__
         self.remain_play_pass = 0
-
+        self.refresh_token = ""
     
     def play_game(self):
         url = "https://game-domain.blum.codes/api/v1/game/play"
         try:
-            res = requests.post(url, headers=self.headers)
+            res = requests.post(url, headers=self.headers, proxies=self.proxy)
             data = res.json()
             if "gameId" in data:
                 gameid = data["gameId"]
@@ -49,7 +69,7 @@ class blump(basetap):
                 }
                 url = "https://game-domain.blum.codes/api/v1/game/claim"
                 time.sleep(31)
-                res = requests.post(url, headers=self.headers, json=body)
+                res = requests.post(url, headers=self.headers, json=body, proxies=self.proxy)
         except Exception as e:
             self.bprint(e)
     
@@ -58,7 +78,11 @@ class blump(basetap):
         try:
             res = requests.get(url, headers=self.headers, proxies=self.proxy)
             data = res.json()
-            print(data)
+
+            if "message" in data and data["message"] == "Invalid jwt token":
+                self.refresh()
+                return self.get_balance_info()
+
             if "playPasses" in data:
                 self.print_balance(float(data['availableBalance']))
                 self.remain_play_pass = int(data['playPasses'])
@@ -66,14 +90,20 @@ class blump(basetap):
                     self.bprint("Start hacking game")
                     self.play_game()
                     return self.get_balance_info()
-                
-                cur = int(time.time() * 1000)
-                time_difference_s = (cur - int(data["farming"]["endTime"]))/1000
-                if time_difference_s >= 0:
-                    return True
+                if "farming" in data:
+                    cur = int(time.time() * 1000)
+                    time_difference_s = (cur - int(data["farming"]["endTime"]))/1000
+                    if time_difference_s >= 0:
+                        return True
+                    else:
+                        self.wait_time = 0 - time_difference_s
+                        return False
                 else:
-                    self.wait_time = 0 - time_difference_s
-                    return False
+                    url = "https://game-domain.blum.codes/api/v1/farming/start"
+                    res = requests.post(url, headers=self.headers, proxies=self.proxy)
+                    return self.get_balance_info()
+            else:
+                return True
         except Exception as e:
             self.bprint(e)
             return True
@@ -81,7 +111,7 @@ class blump(basetap):
     def claim_farm(self):
         url = "https://game-domain.blum.codes/api/v1/farming/claim"
         try:
-            res = requests.post(url, headers=self.headers)
+            res = requests.post(url, headers=self.headers, proxies=self.proxy)
             data = res.json()
             if "availableBalance" in data:
                 self.print_balance(float(data['availableBalance']))
@@ -90,8 +120,47 @@ class blump(basetap):
             self.bprint(e)
         pass
 
+    def login(self):
+        data = {
+            "query" : self.init_data_raw
+        }
+        try:
+            res = requests.post("https://gateway.blum.codes/v1/auth/provider/PROVIDER_TELEGRAM_MINI_APP", headers = UNAUTHORIZED_HDRs, json = data, proxies=self.proxy)
+            data = res.json()
+            if "token" in data and "access" in data["token"]:
+                self.update_header("authorization", "Bearer " + data["token"]["access"])
+                self.refresh_token = data["token"]["refresh"]
+                return True
+            self.bprint("Look like blum updated API login")
+            return False
+        except Exception as e:
+            self.bprint(e)
+            return False
+
+    def refresh(self):
+        if self.refresh_token == "":
+            return self.login()
+        else:
+            data = {
+                "refresh" : self.refresh_token
+            }
+            try:
+                url = "https://gateway.blum.codes/v1/auth/refresh"
+                res = requests.post(url, headers= UNAUTHORIZED_HDRs, json = data, proxies=self.proxy)
+                data = res.json()
+                if "access" in data:
+                    self.update_header("authorization", "Bearer " + data["access"])
+                    self.refresh_token = data["refresh"]
+                    return True
+                self.bprint("Look like blum updated API")
+                return False
+            except Exception as e:
+                self.bprint(e)
+                return False
+
     def parse_config(self, cline):
-        self.update_header("Authorization", cline["Authorization"])
+        self.update_header("authorization", cline["Authorization"])
+        self.parse_init_data_raw(cline["init_data"])
 
     def claim(self):
         if self.get_balance_info():

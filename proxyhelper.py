@@ -11,8 +11,10 @@ class ProxyMode(Enum):
     PROXY_DIRECT = 3
 
 class ProxyType(Enum):
-    SOCKS = "socks5"
+    SOCKS5 = "socks5"
     HTTP = "http"
+    HTTPS = "https"
+    SOCKS4 = "socks4"
 
 class ReturnCode(Enum):
     OK = "LOCAL"
@@ -20,14 +22,19 @@ class ReturnCode(Enum):
     DIE = "Proxy is dead"
     EMPT = "No more proxy"
 
-NORMAL_PROXY = 3 # Type, host, port
-AUTH_PROXY = 5 # Type : host : port : user : pass
-AUTH_PROXY_USER_PASS_FIRST = False
+class ProxyAuthUserPass(Enum):
+    FIRST = 0
+    LAST = 1
+
+NORMAL_PROXY = 2 # Type, host, port
+AUTH_PROXY = 4 # Type : host : port : user : pass
 
 class Proxy:
-    def __init__(self, proxystr : str):
+    def __init__(self, proxystr, userpassmode = ProxyAuthUserPass.FIRST, proxytype = ProxyType.SOCKS5):
         self.data = proxystr.split(":")
         self.valid = True
+        self.proxytype = proxytype.value
+        self.userpassmode = userpassmode
         self.type = NORMAL_PROXY
         if len(self.data) == NORMAL_PROXY or len(self.data) == AUTH_PROXY:
             self.valid = True
@@ -39,11 +46,11 @@ class Proxy:
         if not self.valid:
             return None
         if self.type == NORMAL_PROXY:
-            url = f"{self.data[0]}://{self.data[1]}:{self.data[2]}"
-        elif AUTH_PROXY_USER_PASS_FIRST == False:
-            url = f"{self.data[0]}://{self.data[3]}:{self.data[4]}@{self.data[1]}:{self.data[2]}"
+            url = f"{self.proxytype}://{self.data[0]}:{self.data[1]}"
+        elif self.userpassmode == ProxyAuthUserPass.LAST:
+            url = f"{self.proxytype}://{self.data[2]}:{self.data[3]}@{self.data[0]}:{self.data[1]}"
         else:
-            url = f"{self.data[0]}://{self.data[1]}:{self.data[2]}@{self.data[3]}:{self.data[4]}"
+            url = f"{self.proxytype}://{self.data[0]}:{self.data[1]}@{self.data[2]}:{self.data[3]}"
         proxy = {
             "http" : url,
             "https" : url
@@ -58,10 +65,11 @@ class ProxyHelper:
             cls._instance = super(ProxyHelper, cls).__new__(cls)
         return cls._instance
     
-    def __init__(self, proxyfile = "proxy.txt", proxymode = ProxyMode.PROXY_ROTATION, proxytype = ProxyType.SOCKS):
+    def __init__(self, proxyfile = "proxy.txt", proxymode = ProxyMode.PROXY_ROTATION, proxytype = ProxyType.SOCKS5, mode = ProxyAuthUserPass.FIRST):
         self.proxyfile = proxyfile
         self.proxymode = proxymode
         self.proxytype = proxytype
+        self.userpassmode = mode
         self.proxies = []
         self.rotationkey = ""
         self.died = 0
@@ -91,7 +99,7 @@ class ProxyHelper:
 
     # Build proxy object from string
     def _build_proxy(self, proxy : str):
-        return Proxy(str).build()
+        return Proxy(proxy, self.userpassmode, self.proxytype).build()
     
     # Implement the API to get rotation proxy from service
     def _get_rotation_proxy(self):
@@ -108,19 +116,22 @@ class ProxyHelper:
                 return None
             else:
                 ipdata = data["data"]
-                if self.proxytype == ProxyType.SOCKS:
-                    return "socks5:%s:%s" % (ipdata["host"], ipdata["socksPort"])
+                if self.proxytype == ProxyType.SOCKS5:
+                    return "%s:%s:%s" % (ProxyType.SOCKS5.value, ipdata["host"], ipdata["socksPort"])
                 return "http:%s:%s" % (ipdata["host"], ipdata["port"])
         except Exception as e:
             print(e)
             return None
 
     # Get the next proxy in file
-    def _get_next_proxy(self):
+    def _get_next_proxy(self, rotation):
+        if self.currentidx >= len(self.proxies):
+            if rotation:
+                self.currentidx = 0
+            else:
+                return None
         p = self.proxies[self.currentidx]
         self.currentidx = self.currentidx + 1
-        if self.currentidx >= len(self.proxies):
-            self.currentidx = 0
         return p
     
     # Check if proxy is live or die
@@ -140,14 +151,17 @@ class ProxyHelper:
     def _is_proxy_mode(self, proxymode : ProxyMode):
         return self.proxymode == proxymode
 
-    def get_proxy(self, checklive = True):
+    def get_proxy(self, checklive = True, rotation = True):
         proxystr = ""
         if self._is_proxy_mode(ProxyMode.PROXY_ROTATION):
             proxystr = self._get_rotation_proxy()
         elif self._is_proxy_mode(ProxyMode.PROXY_LIST):
-            proxystr = self._get_next_proxy()
+            proxystr = self._get_next_proxy(rotation)
         else:
             return True, None
+
+        if proxystr == None:
+            return False, None
 
         if checklive:
             if self.is_proxy_live(proxystr):
@@ -155,6 +169,7 @@ class ProxyHelper:
             else:
                 if self._is_proxy_mode(ProxyMode.PROXY_LIST):
                     self.died = self.died + 1
+                    print(f"{proxystr} dead")
                     if self.died >= len(self.proxies):
                         print("All proxy are dead.")
                         return False, ReturnCode.EMPT

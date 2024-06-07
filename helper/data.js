@@ -6,5 +6,5 @@ var configtemplate = [
     {"memefi" : {"authorization" : "Authorization data"}},
     {"tapswap" : {"Authorization" : "Authorization data", "init_data" : "Telegram init data"}},
     {"yescoin" : {"token" : "Authorization data"}},
-    {"blum" : {"Authorization" : "Authorization data"}}
+    {"blum" : {"Authorization" : "Authorization data", "init_data" : "Telegram init data"}}
 ]
