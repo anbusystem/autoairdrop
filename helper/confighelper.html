@@ -114,48 +114,84 @@
         if (selectedTemplate) {
             const template = configtemplate.find(item => item[selectedTemplate]);
 
+            // Tạo hàng riêng biệt cho các trường khác
+            const otherFieldsRow = document.createElement('div');
+            otherFieldsRow.className = 'row mb-2';
+
+            // Tạo hàng cho Proxy và type
+            let proxyTypeRow = document.createElement('div');
+            proxyTypeRow.className = 'row mb-2';
+
             for (const [key, value] of Object.entries(template[selectedTemplate])) {
                 const inputData = data[key] || '';
                 const div = document.createElement('div');
-                div.className = 'form-group';
-                div.innerHTML = `<label for="${key}-${rowIndex}">${value} (Field: ${key}):</label><input type="text" class="form-control" id="${key}-${rowIndex}" name="${key}-${rowIndex}" placeholder="Enter ${value}" value="${inputData}" required>`;
-                fieldsContainer.appendChild(div);
+
+                if (key === "Proxy" || key === "type") {
+                    div.className = 'form-group col-md-6';
+                    if (key === "Proxy") {
+                        div.innerHTML = `<label for="${key}-${rowIndex}">${value}:</label><input type="text" class="form-control" id="${key}-${rowIndex}" name="${key}-${rowIndex}" placeholder="Enter ${value}" value="${inputData}">`;
+                    } else if (key === "type") {
+                        let proxyTypeSelect = `<label for="${key}-${rowIndex}">${value}:</label>`;
+                        proxyTypeSelect += `<select class="form-control" id="${key}-${rowIndex}" name="${key}-${rowIndex}" value="${inputData}" required>`;
+                        proxyTypeSelect += `<option value="socks5">Socks5</option>`;
+                        proxyTypeSelect += `<option value="socks4">Socks4</option>`;
+                        proxyTypeSelect += `<option value="http">Http</option>`;
+                        proxyTypeSelect += `<option value="https">Https</option>`;
+                        proxyTypeSelect += `</select>`;
+                        div.innerHTML = proxyTypeSelect;
+                    }
+                    proxyTypeRow.appendChild(div);
+                } else {
+                    div.className = 'form-group col-md-6';
+                    div.innerHTML = `<label for="${key}-${rowIndex}">${value}:</label><input type="text" class="form-control" id="${key}-${rowIndex}" name="${key}-${rowIndex}" placeholder="Enter ${value}" value="${inputData}" required>`;
+                    otherFieldsRow.appendChild(div);
+                }
             }
+
+            fieldsContainer.appendChild(otherFieldsRow);
+            fieldsContainer.appendChild(proxyTypeRow);
         }
     }
 
-    document.getElementById('dynamicForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form submission to handle data manually
 
-        const formData = [];
-        document.querySelectorAll('#dynamicRows .row').forEach((row, rowIndex) => {
-            const selectElement = row.querySelector('select');
-            if (selectElement && selectElement.value) {
-                const selectedTemplate = selectElement.value;
-                const templateData = { coin: selectedTemplate };
-                row.querySelectorAll('.form-control').forEach(input => {
-                    if (input.value) {
-                        var field_name = input.id.split('-')
-                        var totalparts = field_name.length;
-                        var key = field_name[0];
-                        for(var i = 1; i < (totalparts -1); i++)
-                            key = key + "-" + field_name[i];
-                        if(key !== "") {
-                            templateData[key] = input.value;
-                        }   
-                        
-                    }
-                });
-                formData.push(templateData);
+
+document.getElementById('dynamicForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form submission to handle data manually
+
+    const formData = [];
+    document.querySelectorAll('#dynamicRows .row').forEach((row, rowIndex) => {
+        const selectElement = row.querySelector('select');
+        const templateData = {};
+
+        if (selectElement && selectElement.value && selectElement.id == "") {
+            templateData.coin = selectElement.value;
+        }
+
+        row.querySelectorAll('.form-control').forEach(input => {
+            if (input.value) {
+                const key = input.id.split('-')[0]; // Use the first part of the ID as the key
+                if (key) { // Ensure key is valid
+                    templateData[key] = input.value;
+                }
             }
         });
 
-        console.log('Form Data:', JSON.stringify(formData));
-        saveConfigFile(JSON.stringify(formData, null, '\t'));
+        // Check if templateData is valid before pushing to formData
+        if (Object.keys(templateData).length > 1 && templateData.hasOwnProperty("coin")) {
+            formData.push(templateData);
+        }
     });
+
+    console.log('Form Data:', JSON.stringify(formData));
+    saveConfigFile(JSON.stringify(formData, null, '\t'));
+});
+
+
+
 
     function saveConfigFile(jsonString) {
         document.getElementById('output').value = jsonString;
+        return;
         // Create a Blob from the JSON string
         const blob = new Blob([jsonString], { type: 'application/json' });
 

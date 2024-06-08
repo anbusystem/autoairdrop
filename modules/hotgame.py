@@ -86,7 +86,7 @@ class hotgame(basetap):
     def parse_config(self, cline):
         self.acc_id = cline["accid"]
         self.update_header("Authorization", cline["Authorization"])
-        self.update_header("Telegram-Data", cline["Telegram-Data"])
+        self.update_header("Telegram-Data", cline["init_data"])
 
     def get_account_info(self):
         if self.acc_id is None:

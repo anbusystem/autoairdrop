@@ -6,7 +6,7 @@ from utils import *
 import urllib.parse
 import sys
 import queue
-from proxyhelper import ProxyHelper, ProxyMode, ReturnCode
+from proxyhelper import ProxyHelper, ProxyMode, ReturnCode, Proxy
 from globalconfig import *
 
 class workerhelper:
@@ -32,6 +32,11 @@ class workerhelper:
 				return None
 		else:
 			return workerhelper.proxy
+		
+	@staticmethod
+	def build_proxy(proxy, type):
+		type = ProxyType(type.lower())
+		return Proxy(proxystr=proxy, proxytype=type).build()
 
 class worker(threading.Thread):
 	# inqueue: give me a queue, I will get the config line
@@ -84,7 +89,10 @@ class worker(threading.Thread):
 				if self.validate_cline(cline):
 					self.acquire_lock()
 					ins = create_instances(import_one_module(modules, self.coin))
-					proxy = workerhelper.gen_proxy()
+					if "Proxy" in cline:
+						proxy = workerhelper.build_proxy(cline["Proxy"], cline["type"])
+					else:
+						proxy = workerhelper.gen_proxy()
 					ins.set_proxy(proxy)
 					ins.parse_config(self.params)
 					ins.claim()

@@ -30,7 +30,7 @@ NORMAL_PROXY = 2 # Type, host, port
 AUTH_PROXY = 4 # Type : host : port : user : pass
 
 class Proxy:
-    def __init__(self, proxystr, userpassmode = ProxyAuthUserPass.FIRST, proxytype = ProxyType.SOCKS5):
+    def __init__(self, proxystr, userpassmode = ProxyAuthUserPass.LAST, proxytype = ProxyType.SOCKS5):
         self.data = proxystr.split(":")
         self.valid = True
         self.proxytype = proxytype.value

@@ -119,6 +119,13 @@ class cexio(basetap):
                 data = response.json()
                 if data["status"] == "ok" and "farmStartedAt" in data["data"]:
                     self.bprint("Re-start farm success")
+            elif data["status"] == "error" and "reason" in data["data"] and data["data"]["reason"] == "Farm is not started":
+                url = "https://cexp.cex.io/api/startFarm"
+                response = requests.post(url, headers=self.headers, json=data)
+                data = response.json()
+                if data["status"] == "ok" and "farmStartedAt" in data["data"]:
+                    self.bprint("Re-start farm success")
+
         except Exception as e:
             self.bprint(e)
             return 0

@@ -1,10 +1,10 @@
 var configtemplate = [
-    {"cellcoin"  : {"Authorization" : "Telegram init data"}},
-    {"cexio" : {"init_data" : "Telegram init data"}},
-    {"hamster" : {"authorization" : "Authorization data"}},
-    {"hotgame" : {"accid" : "Account ID", "Authorization" : "Authorization data", "Telegram-Data" : "Telegram init data"}},
-    {"memefi" : {"authorization" : "Authorization data"}},
-    {"tapswap" : {"Authorization" : "Authorization data", "init_data" : "Telegram init data"}},
-    {"yescoin" : {"token" : "Authorization data"}},
-    {"blum" : {"Authorization" : "Authorization data", "init_data" : "Telegram init data"}}
+    {"cellcoin"  : {"Authorization" : "Telegram init data", "Proxy" : "Proxy address", "type" : "Proxy type"}},
+    {"cexio" : {"init_data" : "Telegram init data", "Proxy" : "Proxy address", "type" : "Proxy type"}},
+    {"hamster" : {"authorization" : "Authorization data", "Proxy" : "Proxy address", "type" : "Proxy type"}},
+    {"hotgame" : {"accid" : "Account ID", "Authorization" : "Authorization data", "init_data" : "Telegram init data", "Proxy" : "Proxy address", "type" : "Proxy type"}},
+    {"memefi" : {"authorization" : "Authorization data", "Proxy" : "Proxy address", "type" : "Proxy type"}},
+    {"tapswap" : {"Authorization" : "Authorization data", "init_data" : "Telegram init data", "Proxy" : "Proxy address", "type" : "Proxy type"}},
+    {"yescoin" : {"token" : "Authorization data", "Proxy" : "Proxy address", "type" : "Proxy type"}},
+    {"blum" : {"Authorization" : "Authorization data", "init_data" : "Telegram init data", "Proxy" : "Proxy address", "type" : "Proxy type"}}
 ]
