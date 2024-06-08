@@ -130,8 +130,8 @@ class hotgame(basetap):
             return False
 
     def claim_(self):
-        # response = requests.post(url, headers=self.headers, json=self.body)
-        # print(response.json())
+        response = requests.post(url, headers=self.headers, json=self.body)
+        print(response.json())
         pass
 
     def claim(self):
