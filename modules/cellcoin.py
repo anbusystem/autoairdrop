@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 DEFAULT_HEADER = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0",
     "Accept": "*/*",
-    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Encoding": "gzip, deflate",
     "Accept-Language": "en-US,en;q=0.9,vi;q=0.8",
     "Authorization": "user=%7B%22id%22%3A5624258194%2C%22first_name%22%3A%22Evis%22%2C%22last_name%22%3A%22The%20Cat%22%2C%22username%22%3A%22rokbotsxyz%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=-1610386127424635901&chat_type=sender&start_param=6744843167&auth_date=1716819298&hash=458146b43fb6ebe52ec993f095969dcfc619474cbf43cd31cb7864356c2d9951",
     "DNT": "1",

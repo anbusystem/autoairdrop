@@ -6,7 +6,7 @@ import struct
 
 DEFAULT_HEADERS = {
     "Accept": "*/*",
-    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Encoding": "gzip, deflate",
     "Accept-Language": "en-US,en;q=0.9,vi;q=0.8",
     "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjU2MjQyNTgxOTQsImlhdCI6MTcxNjkwOTI0NywiZXhwIjoxNzE2OTEyODQ3fQ.IO35nSuv6-R3zgR9UB7-j6X7sjGM9wJ8Nj6ujZT91-0",
     "Content-Id": "5623748576",

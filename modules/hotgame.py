@@ -9,7 +9,7 @@ url = "https://api0.herewallet.app/api/v1/user/hot/claim"
 
 DEFAULT_HEADERS = {
     "Accept": "*/*",
-    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Encoding": "gzip, deflate",
     "Accept-Language": "en-US,en;q=0.9",
     "Authorization": "",
     "DeviceId": "fac74489-b389-4995-b300-ade9ca46f159",
