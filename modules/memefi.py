@@ -1,47 +1,118 @@
-from .base import basetap
 import requests
 import time
+import random
+import string
+from urllib.parse import unquote
+from .base import basetap
 
 # Define the URL and the headers
 url = "https://api-gw-tg.memefi.club/graphql"
 DEFAULT_HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0",
-    "authority": "api-gw-tg.memefi.club",
-    "method": "POST",
-    "path": "/graphql",
-    "scheme": "https",
-    "accept": "*/*",
-    "accept-encoding": "gzip, deflate, br, zstd",
-    "accept-language": "en-US,en;q=0.9,vi;q=0.8",
-    "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2MWI5ODYwYjU0MjNlYWI0MmEwZjNkNSIsInVzZXJuYW1lIjoicm9rYm90c3h5eiJ9LCJzZXNzaW9uSWQiOiI2NjYxYWY5OTNjNmVkNDc3Y2JkZTM5ZTgiLCJzdWIiOiI2NjFiOTg2MGI1NDIzZWFiNDJhMGYzZDUiLCJpYXQiOjE3MTc2Nzc5NzcsImV4cCI6MTcxODI4Mjc3N30.mJIL-UBGylUMfhcoKB-12cAk_M3wCgj2m7VanQIdYpc",
-    "dnt": "1",
-    "origin": "https://tg-app.memefi.club",
-    "priority": "u=1, i",
-    "referer": "https://tg-app.memefi.club/",
-    "sec-ch-ua": '"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": '"Windows"',
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "same-site",
-    "Content-Type": "application/json"
+        'Accept': 'application/json',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Content-Type': 'application/json',
+        'Origin': 'https://tg-app.memefi.club',
+        'Referer': 'https://tg-app.memefi.club/',
+        'Sec-Ch-Ua': '"Google Chrome";v="123", "Not:A-Brand";v="8", "Chromium";v="123"',
+        'Sec-Ch-Ua-mobile': '?1',
+        'Sec-Ch-Ua-platform': '"Android"',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-site',
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36',
 }
-DEFAULT_AUTH = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2MWI5ODYwYjU0MjNlYWI0MmEwZjNkNSIsInVzZXJuYW1lIjoicm9rYm90c3h5eiJ9LCJzZXNzaW9uSWQiOiI2NjQ4NTVhNTQyYWRmOTQ4ZGNlODA3N2QiLCJzdWIiOiI2NjFiOTg2MGI1NDIzZWFiNDJhMGYzZDUiLCJpYXQiOjE3MTYwMTY1NDksImV4cCI6MTcxNjYyMTM0OX0.E7FkUdCtK1NuyJgoxs4BdShlMtucv_nZBuWCRoBiGLs"
 # Define the JSON body
+QUERY_LOGIN = """mutation MutationTelegramUserLogin($webAppData: TelegramWebAppDataInput!) {
+            telegramUserLogin(webAppData: $webAppData) {
+                access_token
+                __typename
+            }
+        }"""
 
+QUERY_USER = """
+        query QueryTelegramUserMe {
+          telegramUserMe {
+            firstName
+            lastName
+            telegramId
+            username
+            referralCode
+            isDailyRewardClaimed
+            referral {
+              username
+              lastName
+              firstName
+              bossLevel
+              coinsAmount
+              __typename
+            }
+            isReferralInitialJoinBonusAvailable
+            league
+            leagueIsOverTop10k
+            leaguePosition
+            _id
+            __typename
+          }
+        }
+        """
+
+QUERY_GAME_CONFIG = """
+query QUERY_GAME_CONFIG {
+  telegramGameGetConfig {
+    ...FragmentBossFightConfig
+    __typename
+  }
+}
+
+fragment FragmentBossFightConfig on TelegramGameConfigOutput {
+  _id
+  coinsAmount
+  currentEnergy
+  maxEnergy
+  weaponLevel
+  energyLimitLevel
+  energyRechargeLevel
+  tapBotLevel
+  currentBoss {
+    _id
+    level
+    currentHealth
+    maxHealth
+    __typename
+  }
+  freeBoosts {
+    _id
+    currentTurboAmount
+    maxTurboAmount
+    turboLastActivatedAt
+    turboAmountLastRechargeDate
+    currentRefillEnergyAmount
+    maxRefillEnergyAmount
+    refillEnergyLastActivatedAt
+    refillEnergyAmountLastRechargeDate
+    __typename
+  }
+  bonusLeaderDamageEndAt
+  bonusLeaderDamageStartAt
+  bonusLeaderDamageMultiplier
+  nonce
+  __typename
+}
+"""
 
 
 class memefi(basetap):
-    def __init__(self, auth = DEFAULT_AUTH, proxy = None, headers = DEFAULT_HEADERS):
+    def __init__(self, auth = "", proxy = None, headers = DEFAULT_HEADERS):
         super().__init__()
         self.auth = auth
         self.proxy = proxy
         self.headers = headers
-        self.headers["authorization"] = auth
+        self.access_token = None
         self.stopped = False
         self.wait_time = 10
+        self.remain_boost = 0
         self.name = self.__class__.__name__
-        self.body = {
+        self.claimbody = {
             "operationName": "MutationGameProcessTapsBatch",
             "variables": {
                 "payload": {
@@ -92,76 +163,190 @@ class memefi(basetap):
                 }
             """
         }
-        
 
-    def get_nonce(self):
-        postdata = {
+
+    def login(self):
+        if "Authorization" in self.headers:
+            self.headers.pop("Authorization")
+        user_obj = self.init_data["user"]
+        tg_web_data = unquote(unquote(self.init_data_raw))
+        user_data = tg_web_data.split('user=', maxsplit=1)[1].split('&auth_date', maxsplit=1)[0]
+        data = {
+            "operationName": "MutationTelegramUserLogin",
+            "variables": {
+                "webAppData": {
+                    "auth_date": int(self.init_data["auth_date"]),
+                    "hash": self.init_data["hash"],
+                    "query_id": self.init_data["query_id"],
+                    "checkDataString": f"auth_date={self.init_data['auth_date']}\nquery_id={self.init_data['query_id']}\nuser={user_data}",
+                    "user": {
+                        "id": user_obj["id"],
+                        "allows_write_to_pm": user_obj["allows_write_to_pm"],
+                        "first_name": user_obj["first_name"],
+                        "last_name": user_obj["last_name"],
+                        "username": user_obj.get("username", "Username không được đặt"),
+                        "language_code": user_obj["language_code"],
+                        "version": "7.2",
+                        "platform": "ios"
+                    }
+                }
+            },
+            "query": QUERY_LOGIN
+        }
+        # print(data)
+        try:
+            res = requests.post(url, headers=self.headers, proxies=self.proxy, json=data)
+            # res = self.browser_post(url, data)
+            data = res.json()
+            self.access_token = data["data"]["telegramUserLogin"]["access_token"]
+            self.update_header("Authorization", f"Bearer {self.access_token}")
+            return True
+        except Exception as e:
+            self.bprint(f"Errorr: {res.status_code}")
+            return False
+
+    def get_user_info(self):
+        if self.access_token is None:
+            self.login()
+            if self.access_token is None:
+                self.bprint("Login not work, stop processing")
+                return None
+
+        body = {
             "operationName": "QUERY_GAME_CONFIG",
             "variables": {},
-            "query": """query QUERY_GAME_CONFIG {
-                telegramGameGetConfig {
-                    ...FragmentBossFightConfig
-                    __typename
-                }
-            }
-
-            fragment FragmentBossFightConfig on TelegramGameConfigOutput {
-            _id
-            coinsAmount
-            currentEnergy
-            maxEnergy
-            weaponLevel
-            energyLimitLevel
-            energyRechargeLevel
-            tapBotLevel
-            currentBoss {
-                _id
-                level
-                currentHealth
-                maxHealth
-                __typename
-            }
-            freeBoosts {
-                _id
-                currentTurboAmount
-                maxTurboAmount
-                turboLastActivatedAt
-                turboAmountLastRechargeDate
-                currentRefillEnergyAmount
-                maxRefillEnergyAmount
-                refillEnergyLastActivatedAt
-                refillEnergyAmountLastRechargeDate
-                __typename
-            }
-            bonusLeaderDamageEndAt
-            bonusLeaderDamageStartAt
-            bonusLeaderDamageMultiplier
-            nonce
-            __typename
-            }"""
+            "query": QUERY_GAME_CONFIG
         }
-        url = ""
         try:
-            response = requests.post(url, headers=self.headers, json=postdata)
-            data = response.json()
-            print(response.json())
-            if "data" in data and "telegramGameGetConfig" in data["data"]:
-                nounce = data["data"]["telegramGameGetConfig"]["nonce"]
-                self.body["variables"]["payload"]["nonce"] = nounce
+            res = requests.post(url, headers=self.headers, proxies=self.proxy, json=body)
+            data = res.json()
+            self.remain_boost = int(data['data']['telegramGameGetConfig']['freeBoosts']['currentRefillEnergyAmount'])
+            return data['data']['telegramGameGetConfig']
         except Exception as e:
-            self.bprint("Failed to get nounce")
+            self.bprint("Failed to get user info")
+            return None
+
+
+    def get_nonce(self, length = 52):
+        characters = string.ascii_letters + string.digits
+        return ''.join(random.choice(characters) for _ in range(length))
+    
+    def recharge_energy(self):
+        if self.access_token:
+            if self.remain_boost > 0:
+                boostpayload = {
+                    "operationName": "telegramGameActivateBooster",
+                    "variables": {
+                        "boosterType": "Recharge"
+                    },
+                    "query": """mutation telegramGameActivateBooster($boosterType: BoosterType!) {
+                        telegramGameActivateBooster(boosterType: $boosterType) {
+                            ...FragmentBossFightConfig
+                            __typename
+                        }
+                    }
+
+                    fragment FragmentBossFightConfig on TelegramGameConfigOutput {
+                        _id
+                        coinsAmount
+                        currentEnergy
+                        maxEnergy
+                        weaponLevel
+                        energyLimitLevel
+                        energyRechargeLevel
+                        tapBotLevel
+                        currentBoss {
+                            _id
+                            level
+                            currentHealth
+                            maxHealth
+                            __typename
+                        }
+                        freeBoosts {
+                            _id
+                            currentTurboAmount
+                            maxTurboAmount
+                            turboLastActivatedAt
+                            turboAmountLastRechargeDate
+                            currentRefillEnergyAmount
+                            maxRefillEnergyAmount
+                            refillEnergyLastActivatedAt
+                            refillEnergyAmountLastRechargeDate
+                            __typename
+                        }
+                        bonusLeaderDamageEndAt
+                        bonusLeaderDamageStartAt
+                        bonusLeaderDamageMultiplier
+                        nonce
+                        __typename
+                    }"""
+                }
+                try:
+                    res = requests.post(url, headers=self.headers, json= boostpayload, proxies=self.proxy)
+                    data = res.json()
+                    if "errors" in data:
+                        self.bprint("Recharged failed")
+                        return False
+                    return True
+                except Exception as e:
+                    return False
 
     def claim(self):
-        requests.get("https://api-gw-tg.memefi.club/graphql")
-        time.sleep(10)
-        self.get_nonce()
-        try:
-            response = requests.post(url, headers=self.headers, json=self.body, proxies=self.proxy)
-            data = response.json()
-            print(data)
-            self.print_balance(data['data']['telegramGameProcessTapsBatch']['coinsAmount'])
-        except Exception as e:
-            self.bprint(e)
-    
+        userinfo = self.get_user_info()
+        print(userinfo)
+        if userinfo is None:
+            self.bprint("Get user info failed, May be you need to check")
+            self.wait_time = 60*60 # Wait 1 hrs
+        else:
+            
+            curenegy = int(userinfo['currentEnergy'])
+            coinamount = userinfo['coinsAmount']
+            while curenegy > 200:
+                self.bprint(f"Balance 💎 : {coinamount}")
+                self.bprint(f"Remain energy: {curenegy} / {userinfo['maxEnergy']}")
+                self.claimbody["variables"]["payload"]["tapsCount"] = random.randint(10, 100)
+                self.claimbody["variables"]["payload"]["nonce"] = self.get_nonce()
+                try:
+                    response = requests.post(url, headers=self.headers, json=self.claimbody, proxies=self.proxy)
+                    data = response.json()
+                    userinfo = self.get_user_info()
+                    coinamount = data['data']['telegramGameProcessTapsBatch']['coinsAmount']
+                    curenegy = data['data']['telegramGameProcessTapsBatch']['currentEnergy']
+                except Exception as e:
+                    self.bprint(e)
+                time.sleep(1)
+            self.bprint("Enerny is low. Try recharging...")
+            if self.recharge_energy():
+                self.bprint("Recharge success, call claim again")
+                return self.claim()
+            else:
+                self.bprint("Recharge failed, maybe not enough free boost")
+            self.bprint("Wait 30 mins for next iteration")
+            self.wait_time = 30*60
+
     def parse_config(self, cline):
-        self.update_header("authorization", cline["authorization"])
+        self.parse_init_data_raw(cline["init_data"])
+
+    # def browser_post(self, url, data):
+    #     async def post_async():
+    #         async with aiohttp.ClientSession() as session:
+    #             async with session.post(url, headers=self.headers, json = data) as response:
+    #                 # print(response.status_code)
+    #                 return await response.json()
+
+    #     loop = asyncio.get_event_loop()
+    #     return loop.run_until_complete(post_async())
+
+if __name__ == "__main__":
+    cline = {
+		"coin": "memefi",
+		"init_data": "query_id=AAGSXjtPAgAAAJJeO08n-Ybf&user=%7B%22id%22%3A5624258194%2C%22first_name%22%3A%22The%20Meoware%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22themeoware%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1717825475&hash=7b082226ad67778b6a3a068f64010add096f7f2a2c6021f862847bf6e95281f4",
+		"type": "socks5"
+	}
+    obj = memefi()
+    obj.parse_config(cline)
+    obj.login()
+    obj.remain_boost = 1
+    obj.claim()
+    # obj.claim() 
+    # obj.get_nonce()

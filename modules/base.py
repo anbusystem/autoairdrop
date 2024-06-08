@@ -65,10 +65,10 @@ class basetap:
 
     def print_balance(self, bl):
         if int(bl) > self.oldbalance:
-            print_green_line(f"{self.name}: Account balance {bl} ^")
+            print_green_line(f"{self.name}: Balance 💎: {bl} ^")
             self.oldbalance = int(bl)
         else:
-            print(f"{self.name}: Account balance {bl}")
+            print(f"{self.name}: Balance 💎: {bl}")
 
     def bprint(self, msg):
         print(f"{self.name}: {msg}")
