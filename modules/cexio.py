@@ -36,24 +36,19 @@ class cexio(basetap):
         self.farm_reward = 0
         self.children_reward = 0
         self.next_farm_collect_time = 0
+        
 
     def claim_children_reward(self):
         url = "https://cexp.cex.io/api/getChildren"
-        data = {
-            "devAuthData": self.init_data["user"]["id"],
-            "authData": self.init_data_raw,
-            "platform": "android",
-            "data": {}
-        }
 
         try:
-            response = requests.post(url, headers=self.headers, json=data)
+            response = requests.post(url, headers=self.headers, json = self.bodynormal)
             data = response.json()
-            print(data)
+
             self.children_reward = float(data["data"]["totalRewardsToClaim"])
             if self.children_reward > 0:
                 url = "https://cexp.cex.io/api/claimFromChildren"
-                response = requests.post(url, headers=self.headers, json=data)
+                response = requests.post(url, headers=self.headers, json= self.bodynormal)
                 data = response.json()
                 if data["status"] == "ok":
                     self.bprint("Claim children reward ok")
@@ -75,15 +70,9 @@ class cexio(basetap):
 
     def get_balance_and_remain(self):
         url = "https://cexp.cex.io/api/getUserInfo"
-        data = {
-            "devAuthData": self.init_data["user"]["id"],
-            "authData": self.init_data_raw,
-            "platform": "android",
-            "data": {}
-        }
 
         try:
-            response = requests.post(url, headers=self.headers, json=data)
+            response = requests.post(url, headers=self.headers, json = self.bodynormal)
             data = response.json()
             self.print_balance(float(data["data"]["balance"]))
             self.farm_reward = float(data["data"]["farmReward"])
@@ -98,30 +87,25 @@ class cexio(basetap):
     
     def claim_farm_and_start_farm(self):
         url = "https://cexp.cex.io/api/claimFarm"
-        data = {
-            "devAuthData": self.init_data["user"]["id"],
-            "authData": self.init_data_raw,
-            "platform": "android",
-            "data": {}
-        }
+    
         if not self.is_ready_to_collect_farm():
             return
 
         try:
-            response = requests.post(url, headers=self.headers, json=data)
+            response = requests.post(url, headers=self.headers, json= self.bodynormal)
             data = response.json()
             print(data)
             if data["status"] == "ok" and "claimedBalance" in data["data"]:
                 self.bprint("Claim farm ok")
                 self.farm_reward = 0
                 url = "https://cexp.cex.io/api/startFarm"
-                response = requests.post(url, headers=self.headers, json=data)
+                response = requests.post(url, headers=self.headers, json = self.bodynormal)
                 data = response.json()
                 if data["status"] == "ok" and "farmStartedAt" in data["data"]:
                     self.bprint("Re-start farm success")
             elif data["status"] == "error" and "reason" in data["data"] and data["data"]["reason"] == "Farm is not started":
                 url = "https://cexp.cex.io/api/startFarm"
-                response = requests.post(url, headers=self.headers, json=data)
+                response = requests.post(url, headers=self.headers, json = self.bodynormal)
                 data = response.json()
                 if data["status"] == "ok" and "farmStartedAt" in data["data"]:
                     self.bprint("Re-start farm success")
@@ -132,17 +116,25 @@ class cexio(basetap):
 
     def parse_config(self, cline):
         self.parse_init_data_raw(cline["init_data"])
+        self.bodynormal = {
+            "devAuthData": self.init_data["user"]["id"],
+            "authData": self.init_data_raw,
+            "platform": "android",
+            "data": {}
+        }
+        self.bodytap = {
+            "devAuthData": self.init_data["user"]["id"],
+            "authData": self.init_data_raw,
+            "data": {"taps": 0}
+        }
 
     def try_claim(self, tapnum = 1):
         url = "https://cexp.cex.io/api/claimTaps"
 
-        data = {
-            "devAuthData": self.init_data["user"]["id"],
-            "authData": self.init_data_raw,
-            "data": {"taps": tapnum}
-        }
+        body = self.bodytap
+        body["data"]["tap"] = int(tapnum)
 
-        response = requests.post(url, headers=self.headers, json=data)
+        response = requests.post(url, headers=self.headers, json=body)
 
     
     def claim(self):
