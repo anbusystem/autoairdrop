@@ -32,19 +32,19 @@ def schedule_new_iteration(wait_time, cline):
     t = threading.Thread(target=thread_wait_and_pushback, args=(wait_time, cline))
     t.start()
 
-def load_config():
-    with open("config.json") as f:
+def load_config(configfile = "config.json"):
+    with open(configfile) as f:
         data = f.read()
         try:
             config = json.loads(data)
             return config
         except Exception as e:
-            print("The config.json is wrong")
+            print(f"The {configfile} is wrong")
     return None
 
-def initialized_app():
+def initialized_app(configfile):
     global threads, worker_queue, request_locking, max_threads
-    config = load_config()
+    config = load_config(configfile)
     if config == None:
         print("Exit")
         sys.exit(1)
@@ -59,7 +59,10 @@ def initialized_app():
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
-    initialized_app()
+    configfile = "config.json"
+    if len(sys.argv) == 2:
+        configfile = sys.argv[1]
+    initialized_app(configfile)
     for t in threads:
         t.start()
         time.sleep(1)
