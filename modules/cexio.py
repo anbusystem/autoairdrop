@@ -132,7 +132,7 @@ class cexio(basetap):
         url = "https://cexp.cex.io/api/claimTaps"
 
         body = self.bodytap
-        body["data"]["tap"] = int(tapnum)
+        body["data"]["taps"] = int(tapnum)
 
         response = requests.post(url, headers=self.headers, json=body)
 
