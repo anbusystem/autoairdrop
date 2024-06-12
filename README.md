@@ -17,23 +17,13 @@ A simple application written in Python with requests library to achieve the smoo
 
 ## Installation
 
-For claiming of normal coins using requests, you need to have python install on the computer (or event a phone) and modify config.json with your actual data.
+For claiming supported coins using requests, you need to have python install on the computer (or event a phone) and modify config.json with your actual data.
 
 ```bash
   cd autoairdrop
   pip install requests
   python main.py
 ```
-
-For claiming of hot coin on near wallet, you need also the python and remember to edit hotnear.json to put your account id and privatekey
-
-```bash
-  cd autoairdrop
-  pip install -r requirements
-  python onlyhotcoin.py
-```
-
-In case you meet error when run the pip install, please raise an issue and put your telegram account so I can support
 
 ## Support
 
@@ -45,14 +35,13 @@ Sorry, due to my workload, no support available at the moment. In addition, you 
 | Bot/Token name  | Script name  | Ref-link | Status |
 | :------------ |:---------------:| -----:| -----: |
 | Yes coin      | yescoin.py | https://t.me/theYescoin_bot/Yescoin?startapp=zNqNe6 |  Working |
-| Tapswap      | tapswap.py | https://t.me/tapswap_mirror_2_bot?start=r_5624258194 |  Working |
+| Tapswap      | tapswap.py | https://t.me/tapswap_mirror_2_bot?start=r_5624258194 |  Not working |
 | Memefi      | memefi.py | https://t.me/memefi_coin_bot?start=r_e152eb67a1 |  Working |
 | Hamster Kombat      | hamster.py | https://t.me/hamster_kombat_bot?start=kentId5624258194  |  Working |
 | CEX IO Tap      | cexio.py | https://t.me/cexio_tap_bot?start=1716560687385300 |  Working |
 | Cell coin      | cellcoin.py | https://t.me/cellcoin_bot?start=5624258194 |  Working |
-| Blump coin      | blump.py |  |  Plan |
+| Blum coin      | blum.py |  |  Working |
 | Seed coin      | seed.py | https://t.me/seed_coin_bot/app?startapp=5624258194 |  Plan |
-| VivaFtn      | seed.py |  |  Not support |
 | Hot coin      | hotclaimnear.py | https://t.me/herewalletbot/app?startapp=4222126 |  Working |
 
 
