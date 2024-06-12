@@ -42,7 +42,9 @@ Sorry, due to my workload, no support available at the moment. In addition, you 
 | Cell coin      | cellcoin.py | https://t.me/cellcoin_bot?start=5624258194 |  Working |
 | Blum coin      | blum.py |  |  Working |
 | Seed coin      | seed.py | https://t.me/seed_coin_bot/app?startapp=5624258194 |  Plan |
-| Hot coin      | hotclaimnear.py | https://t.me/herewalletbot/app?startapp=4222126 |  Working |
+| Hot coin      | hotgame.py | https://t.me/herewalletbot/app?startapp=4222126 |  Working |
+| Timefarm      | timefarm.py | https://t.me/TimeFarmCryptoBot?start=iW2YPYCj0TkCSyRm |  Working |
+
 
 
 
