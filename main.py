@@ -62,6 +62,9 @@ if __name__ == "__main__":
     configfile = "config.json"
     if len(sys.argv) == 2:
         configfile = sys.argv[1]
+    elif len(sys.argv) == 3:
+        configfile = sys.argv[1]
+        max_threads = int(sys.argv[2])
     initialized_app(configfile)
     for t in threads:
         t.start()

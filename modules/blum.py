@@ -57,6 +57,7 @@ class blump(basetap):
         self.refresh_token = ""
     
     def play_game(self):
+        return False
         url = "https://game-domain.blum.codes/api/v1/game/play"
         try:
             res = requests.post(url, headers=self.headers, proxies=self.proxy)
@@ -86,10 +87,12 @@ class blump(basetap):
             if "playPasses" in data:
                 self.print_balance(float(data['availableBalance']))
                 self.remain_play_pass = int(data['playPasses'])
-                if self.remain_play_pass > 0:
-                    self.bprint("Start hacking game")
-                    self.play_game()
-                    return self.get_balance_info()
+                self.bprint(f"Your playpass: {self.remain_play_pass}")
+                # if self.remain_play_pass > 0:
+                    # self.bprint("Start hacking game")
+                    # self.play_game()
+                    # return True
+                    # return self.get_balance_info()
                 if "farming" in data:
                     cur = int(time.time() * 1000)
                     time_difference_s = (cur - int(data["farming"]["endTime"]))/1000
@@ -137,6 +140,21 @@ class blump(basetap):
             self.bprint(e)
             return False
 
+    def get_daily_reward(self):
+        url = "https://game-domain.blum.codes/api/v1/daily-reward?offset=-420"
+        if self.refresh_token == "":
+            self.login()
+        
+        data = "offset=-420"
+        try:
+            res = requests.post(url, headers=self.headers, proxies=self.proxy, data=data)
+            if res.status_code == 200:
+                self.bprint("Get daily reward success")
+                return True
+        except Exception as e:
+            self.bprint(e)
+        return False
+
     def refresh(self):
         if self.refresh_token == "":
             return self.login()
@@ -163,6 +181,8 @@ class blump(basetap):
         self.parse_init_data_raw(cline["init_data"])
 
     def claim(self):
+        self.get_daily_reward()
         if self.get_balance_info():
             self.claim_farm()
+            
         
