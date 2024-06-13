@@ -1,10 +1,5 @@
-[
-    {"cellcoin"  : {"Authorization" : "Telegram init data"}},
-    {"cexio" : {"init_data" : "Telegram init data"}},
-    {"hamster" : {"authorization" : "Authorization data"}},
-    {"hotgame" : {"accid" : "Account ID", "Authorization" : "Authorization data", "Telegram-Data" : "Telegram init data"}},
-    {"memefi" : {"authorization" : "Authorization data", "nonce" : "Your nonce number"}},
-    {"tapswap" : {"Authorization" : "Authorization data", "init_data" : "Telegram init data"}},
-    {"yescoin" : {"token" : "Authorization data"}}
+Don't refer to this file.
 
-]
+We create a tool for you to create a config.json
+
+https://anbusystem.github.io/autoairdrop/helper/confighelper.html
