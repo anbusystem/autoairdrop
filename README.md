@@ -22,8 +22,10 @@ For claiming supported coins using requests, you need to have python install on 
 ```bash
   cd autoairdrop
   pip install requests
-  python main.py
+  python main.py config.json
 ```
+
+Note: config.json can be replaced by any file with similar structure generated from: https://anbusystem.github.io/autoairdrop/helper/confighelper.html
 
 ## Support
 
