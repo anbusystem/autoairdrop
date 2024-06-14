@@ -5,6 +5,7 @@ import random
 import json
 import importlib
 import pkgutil
+import webbrowser
 import inspect
 from enum import Enum
 
@@ -33,4 +34,7 @@ def get_random_ua():
 	if ua:
 		return ua["ua"]
 	return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0"
-	
+
+def open_helper():
+	url = 'https://anbusystem.github.io/autoairdrop/helper/confighelper.html'
+	webbrowser.open_new_tab(url)

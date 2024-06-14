@@ -4,6 +4,7 @@ import threading
 import signal
 import json
 import sys
+from utils import open_helper
 from worker import worker
 
 worker_queue = queue.Queue()
@@ -62,6 +63,7 @@ def initialized_app(configfile):
 
     if not valid:
         print(f"The {configfile} is not valid, ensure to generate it using confighelper")
+        open_helper()
         sys.exit(1)
     
     for i in range(0, max_threads):
