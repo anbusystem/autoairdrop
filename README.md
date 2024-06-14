@@ -8,9 +8,9 @@ A simple application written in Python with requests library to achieve the smoo
 
 ## Features
 
-- Auto claim for popular airdrop app like: yescoin, tapswap, cexio...
+- Auto claim for popular airdrop app like: yescoin, tapswap, cexio, blum, hamster...
 - With proxy support
-- Auto claim hot coin using NEAR transaction API
+- With random user-agent to make yourself safer (bypass bot detection system)
 - Cross platform, run anywhere 
 - Very light weight and friendly framework
 
