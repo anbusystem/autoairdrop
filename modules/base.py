@@ -21,6 +21,7 @@ class basetap:
         self.init_data = {}
         self.init_data_raw = ""
         self.init_data_load = False
+        self.modver = "v1.0"
 
     def set_ua(self, ua):
         uastr = ua

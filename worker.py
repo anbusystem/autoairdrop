@@ -96,6 +96,8 @@ class worker(threading.Thread):
 					ins.set_proxy(proxy)
 					if "ua" not in cline:
 						ins.set_ua(get_random_ua())
+					else:
+						ins.set_ua(cline["ua"])
 					ins.parse_config(self.params)
 					self.acquire_lock()
 					ins.claim()

@@ -1,13 +1,11 @@
-import signal
-import time
-import sys
+import requests
 import random
 import json
 import importlib
 import pkgutil
 import webbrowser
 import inspect
-from enum import Enum
+
 
 def create_instances(module):
 	for name, obj in inspect.getmembers(module):
@@ -38,3 +36,40 @@ def get_random_ua():
 def open_helper():
 	url = 'https://anbusystem.github.io/autoairdrop/helper/confighelper.html'
 	webbrowser.open_new_tab(url)
+
+def check_update_data(corever: str, modver: str):
+	url = "https://raw.githubusercontent.com/anbusystem/AutoAirdropClaimer/main/version.json"
+	update_data = {
+		"core" : {
+			"update" : False,
+			"url" : ""
+		},
+		"mod" : {
+			"update" : False,
+			"url" : ""
+		}
+	}
+	try:
+		res = requests.get(url)
+		data = res.json()
+		if corever != data["corever"]:
+			update_data["core"]["update"] = True
+			update_data["core"]["url"] = data["coreurl"]
+		if modver != data["modever"]:
+			update_data["mod"]["update"] = True
+			update_data["mod"]["url"] = data["modurl"]
+		return update_data
+	except Exception as e:
+		print("Check update failed")
+		return None
+	
+def check_update(corever: str, modver: str):
+	update_data = check_update_data(corever, modver)
+	if update_data and update_data["core"]["update"]:
+		execute_update("core", update_data["core"]["url"])
+	
+	if update_data and update_data["mod"]["update"]:
+		execute_update("mod", update_data["mod"]["url"])
+
+def execute_update(type, url):
+	pass

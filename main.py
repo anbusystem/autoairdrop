@@ -7,6 +7,8 @@ import sys
 from utils import open_helper
 from worker import worker
 
+APP_VERSION = "v2.1"
+
 worker_queue = queue.Queue()
 is_app_running = True
 worker_queue_lock = threading.Lock()
