@@ -1,6 +1,7 @@
 import signal
 import time
 import sys
+import random
 import json
 import importlib
 import pkgutil
@@ -22,79 +23,14 @@ def import_one_module(package, mname):
 			return importedm
 	return None
 
-class CONFIG(Enum):
-	ACCOUNT = "accounts"
-	PROXY = "proxy"
-	THREAD = "thread"
 
-class SUBCONFIG(Enum):
-	COIN = "coin"
-	INITDATA = "initdata"
-	HDRFIELD = "type"
-	HDRTOKEN = "auth"
-	PROXYFILE = "proxyfile"
-	PROXYTYPE = "proxytype"
-	PROXYMODE = "proxymode"
-	PROXYDIEACTION = "proxydie"
-	PROXYDIEACTIONSTOP = "STOP"
-	PROXYDIEACTIONSKIP = "SKIP"
-	PROXYROT = "ROT"
-	THREADMODE = "threadmode"
-	THREADMODESPAWNALL = "SPAWN_ALL"
-	THREADMODEPOOL = "THREAD_POOL"
-	THREADNUMBER = "thread_number"
-
-class ConfigParser:
-	_instance = None
-
-	def __new__(cls, *args, **kwargs):
-		if not cls._instance:
-			cls._instance = super(ConfigParser, cls).__new__(cls)
-		return cls._instance
-
-	def __init__(self, cfile="config.json"):
-		if not hasattr(self, '_initialized'):  # Check if already initialized
-			self.cfg = {}
-			self.cfile = cfile
-			try:
-				with open(cfile) as f:
-					self.cfg = json.loads(f.read())
-					self.cfgvalid = True
-			except Exception as e:
-				self.cfgvalid = False
-			self._initialized = True
-
-	def get(self, cname, scname=None):
-		if cname in self.cfg:
-			data = self.cfg[cname]
-			if scname is not None and scname in data:
-				return data[scname]
-			else:
-				return data
-		else:
-			return None
-
-	def set(self, cname, data):
-		self.cfg[cname] = data
-
-	def __del__(self):
-		with open(self.cfile, "w") as f:
-			f.write(json.dumps(self.cfg))
-
-class proxyhelper:
-	_instance = None
-
-	def __new__(cls, *args, **kwargs):
-		if not cls._instance:
-			cls._instance = super(ConfigParser, cls).__new__(cls)
-		return cls._instance
-
-	def __init__(self, cfile):
-		if not hasattr(self, '_initialized'):  # Check if already initialized
-			self.cfg = ConfigParser(cfile)
-			self.proxymode = self.cfg.get(CONFIG.PROXY.value, SUBCONFIG.PROXYMODE.value)
-			self.proxyfile = self.cfg.get(CONFIG.PROXY.value, SUBCONFIG.PROXYFILE.value)
-			self.proxydieaction = self.cfg.get(CONFIG.PROXY.value, SUBCONFIG.PROXYDIEACTION.value)
-			self.proxytype = self.cfg.get(CONFIG.PROXY.value, SUBCONFIG.PROXYTYPE.value)
-			self._initialized = True
+def get_random_ua():
+	ualist = []
+	with open("ua.json") as f:
+		content = f.read()
+		ualist = json.loads(content)
+	ua = random.choice(ualist)
+	if ua:
+		return ua["ua"]
+	return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0"
 	

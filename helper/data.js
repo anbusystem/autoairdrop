@@ -10,3 +10,9 @@ var configtemplate = [
     {"yescoin" : {"token" : "Authorization data", "Proxy" : "Proxy address", "type" : "Proxy type"}},
     {"blum" : {"Authorization" : "Authorization data", "init_data" : "Telegram init data", "Proxy" : "Proxy address", "type" : "Proxy type"}}
 ]
+
+var common_config = {
+    "Proxy" : "Proxy address",
+    "type" : "Proxy type",
+    "ua"  : "User agent"
+}

@@ -8,6 +8,7 @@ import sys
 import queue
 from proxyhelper import ProxyHelper, ProxyMode, ReturnCode, Proxy
 from globalconfig import *
+from utils import get_random_ua
 
 class workerhelper:
 	proxy = None
@@ -87,14 +88,16 @@ class worker(threading.Thread):
 				continue
 			try:
 				if self.validate_cline(cline):
-					self.acquire_lock()
 					ins = create_instances(import_one_module(modules, self.coin))
 					if "Proxy" in cline:
 						proxy = workerhelper.build_proxy(cline["Proxy"], cline["type"])
 					else:
 						proxy = workerhelper.gen_proxy()
 					ins.set_proxy(proxy)
+					if "ua" not in cline:
+						ins.set_ua(get_random_ua())
 					ins.parse_config(self.params)
+					self.acquire_lock()
 					ins.claim()
 					if self.cb:
 						print(f"Waing {ins.wait_time} seconds for next run")

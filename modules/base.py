@@ -1,6 +1,7 @@
 import threading
 import time
 import json
+import random
 import urllib.parse
 
 TIME_WAIT = 10
@@ -21,6 +22,15 @@ class basetap:
         self.init_data_raw = ""
         self.init_data_load = False
 
+    def set_ua(self, ua):
+        uastr = ua
+        if isinstance(ua, str):
+            pass
+        else:
+            uastr = ua()
+        self.update_header("User-Agent", uastr)
+        self.update_header("user-agent", uastr)
+            
     def parse_config(self, cline):
         self.bprint("You should implement the parse config function")
 

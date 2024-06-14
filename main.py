@@ -42,6 +42,11 @@ def load_config(configfile = "config.json"):
             print(f"The {configfile} is wrong")
     return None
 
+def is_config_valid(c):
+    if "coin" in c:
+        return True
+    return False
+
 def initialized_app(configfile):
     global threads, worker_queue, request_locking, max_threads
     config = load_config(configfile)
@@ -49,9 +54,16 @@ def initialized_app(configfile):
         print("Exit")
         sys.exit(1)
 
+    valid = False
     for c in config:
-        worker_queue.put(c)
+        if is_config_valid(c):
+            worker_queue.put(c)
+            valid = True
 
+    if not valid:
+        print(f"The {configfile} is not valid, ensure to generate it using confighelper")
+        sys.exit(1)
+    
     for i in range(0, max_threads):
         t = worker(worker_queue, schedule_new_iteration, request_locking)
         threads.append(t)
