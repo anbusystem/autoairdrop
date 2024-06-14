@@ -55,7 +55,7 @@ def check_update_data(corever: str, modver: str):
 		if corever != data["corever"]:
 			update_data["core"]["update"] = True
 			update_data["core"]["url"] = data["coreurl"]
-		if modver != data["modever"]:
+		if modver != data["modver"]:
 			update_data["mod"]["update"] = True
 			update_data["mod"]["url"] = data["modurl"]
 		return update_data
@@ -72,4 +72,4 @@ def check_update(corever: str, modver: str):
 		execute_update("mod", update_data["mod"]["url"])
 
 def execute_update(type, url):
-	pass
+	webbrowser.open_new_tab(url)

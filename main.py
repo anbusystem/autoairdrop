@@ -4,10 +4,11 @@ import threading
 import signal
 import json
 import sys
-from utils import open_helper
+from utils import open_helper, check_update
 from worker import worker
+from modules.base import MODULE_VER
 
-APP_VERSION = "v2.1"
+APP_VERSION = "2.1"
 
 worker_queue = queue.Queue()
 is_app_running = True
@@ -68,12 +69,23 @@ def initialized_app(configfile):
         open_helper()
         sys.exit(1)
     
+    print(f"Start launching {max_threads} threads...")
     for i in range(0, max_threads):
         t = worker(worker_queue, schedule_new_iteration, request_locking)
         threads.append(t)
 
-
+intro = '''
+    _         _             _    _         _                    ____ _       _                     
+   / \  _   _| |_ ___      / \  (_)_ __ __| |_ __ ___  _ __    / ___| | __ _(_)_ __ ___   ___ _ __ 
+  / _ \| | | | __/ _ \    / _ \ | | '__/ _` | '__/ _ \| '_ \  | |   | |/ _` | | '_ ` _ \ / _ \ '__|
+ / ___ \ |_| | || (_) |  / ___ \| | | | (_| | | | (_) | |_) | | |___| | (_| | | | | | | |  __/ |   
+/_/   \_\__,_|\__\___/  /_/   \_\_|_|  \__,_|_|  \___/| .__/   \____|_|\__,_|_|_| |_| |_|\___|_|   
+                                                      |_|                                          
+'''
 if __name__ == "__main__":
+    check_update(APP_VERSION, MODULE_VER)
+    print(intro)
+    print(f"Build information | App: {APP_VERSION}, Script: {MODULE_VER}")
     signal.signal(signal.SIGINT, signal_handler)
     configfile = "config.json"
     if len(sys.argv) == 2:

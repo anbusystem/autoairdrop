@@ -5,7 +5,7 @@ import random
 import urllib.parse
 
 TIME_WAIT = 10
-
+MODULE_VER = "2.1"
 def print_green_line(line):
     GREEN = "\033[92m"
     RESET = "\033[0m"

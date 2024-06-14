@@ -52,6 +52,103 @@ class yescoin(basetap):
         except Exception as e:
             self.bprint(e)
 
+    def get_boost_info(self):
+        url = "https://api.yescoin.gold/build/getAccountBuildInfo"
+        try:
+            res = requests.get(url, headers=self.headers, proxies=self.proxy)
+            data = res.json()
+            if "message" in data and data["message"] == "Success":
+                return data
+        except Exception as e:
+            self.bprint(e)
+        return None
+
+    def boost_full_energy(self):
+        data = self.get_boost_info()
+        if data and int(data["data"]["coinPoolLeftRecoveryCount"]) > 0:
+            url = "https://api.yescoin.gold/game/recoverCoinPool"
+            try:
+                res = requests.post(url, headers=self.headers, proxies=self.proxy)
+                data = res.json()
+                if "message" in data and data["message"] == "Success":
+                    self.bprint("Boost full recovery success")
+                    return True
+            except Exception as e:
+                self.bprint(e)
+        return False
+
+    def boost_special_box(self):
+        data = self.get_boost_info()
+        if data and int(data["data"]["specialBoxLeftRecoveryCount"]) > 0:
+            url = "https://api.yescoin.gold/game/recoverSpecialBox"
+            try:
+                res = requests.post(url, headers=self.headers, proxies=self.proxy)
+                data = res.json()
+                if "message" in data and data["message"] == "Success":
+                    self.bprint("Boost special recovery success")
+                    time.sleep(10)
+                    payload = {
+                        "boxType" : 2,
+                        "coinCount" : 200
+                    }
+                    url = "https://api.yescoin.gold/game/collectSpecialBoxCoin"
+                    res = requests.post(url, headers=self.headers, proxies=self.proxy, json=payload)
+                    return True
+            except Exception as e:
+                self.bprint(e)
+        return False
+    
+    def wait_time_calculate(self, timestart):
+        cur = int(time.time())
+        if cur > timestart:
+            self.wait_time = 1
+            return True
+        else:
+            self.wait_time = timestart - cur
+            return False
+
+    def monitor_special_box(self):
+        url = "https://api.yescoin.gold/game/getSpecialBoxInfo"
+        try:
+            res = requests.get(url, headers=self.headers, proxies=self.proxy)
+            data = res.json()
+            if "message" in data and data["message"] == "Success":
+                try:
+                    if data["data"]["autoBox"]:
+                        self.bprint("Auto box available")
+                        if self.wait_time_calculate(data["data"]["autoBox"]["startTime"]):
+                            payload = {
+                                "boxType" : data["data"]["autoBox"]["boxType"],
+                                "coinCount" : data["data"]["autoBox"]["specialBoxTotalCount"]
+                            }
+                            url = "https://api.yescoin.gold/game/collectSpecialBoxCoin"
+                            res = requests.post(url, headers=self.headers, proxies=self.proxy, json=payload)
+                            data = res.json()
+                            self.bprint(data)
+                    else:
+                        self.bprint("No autobox found")
+                except Exception as e:
+                    self.bprint(e)
+
+                try:
+                    if data["data"]["recoveryBox"]:
+                        revbox = data["data"]["recoveryBox"]
+                        payload = {
+                                "boxType" : revbox["boxType"],
+                                "coinCount" : revbox["specialBoxTotalCount"]
+                        }
+                        url = "https://api.yescoin.gold/game/collectSpecialBoxCoin"
+                        res = requests.post(url, headers=self.headers, proxies=self.proxy, json=payload)
+                        data = res.json()
+                        self.bprint(data)
+                    else:
+                        self.bprint("No recovery box found")
+                except Exception as e:
+                    self.bprint(e)
+        except Exception as e:
+            self.bprint(e)
+        return None
+
     def get_info(self):
         url = "https://api.yescoin.gold/account/getAccountInfo"
         try:
@@ -62,9 +159,18 @@ class yescoin(basetap):
             self.bprint(e)
 
     def claim(self):
+        self.wait_time = 5
+        self.monitor_special_box()
         remain_coin = self.get_remain_coin()
         self.collect_coin(remain_coin)
         self.get_info()
+        if self.boost_full_energy():
+            remain_coin = self.get_remain_coin()
+            self.collect_coin(remain_coin)
+            self.get_info()
+        if self.boost_special_box():
+            self.get_info()
+        
 
     def parse_config(self, cline):
         self.update_header("token", cline["token"])

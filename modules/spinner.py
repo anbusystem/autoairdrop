@@ -6,6 +6,7 @@ else:
 import pytz
 import time
 from datetime import datetime
+import random
 
 
 DEFAULT_HEADERS = {
@@ -61,6 +62,7 @@ class spinner(basetap):
                 self.is_broken = thespinner["isBroken"]
                 self.end_time = thespinner["endRepairTime"]
                 self.remain_hp = int(thespinner["hp"])
+                self.spinner_id = thespinner["id"]
                 self.print_balance(float(data["initData"]["user"]["balance"]))
                 self.calculate_wait_time()
                 return True
@@ -83,6 +85,9 @@ class spinner(basetap):
         self.bprint("Repair spinner failed")
 
     def calculate_wait_time(self):
+        if self.end_time is None:
+            self.wait_time = 0
+            return
         datetime_obj = datetime.strptime(self.end_time, "%Y-%m-%dT%H:%M:%S.%fZ")
         datetime_obj = datetime_obj.replace(tzinfo=pytz.UTC)
         # Convert to epoch seconds
@@ -135,8 +140,10 @@ class spinner(basetap):
         try:
             res = requests.post(url, proxies=self.proxy, headers=self.headers, json=self.body)
             data = res.json()
+            print(data)
             if "boxes" in data:
                 for i in range(0, len(data["boxes"])):
+                    
                     if self.is_box_ready_to_open(data["boxes"][i]["open_time"]):
                         self.boxes.append(data["boxes"][i]["id"])
             self.bprint(f"Found {len(self.boxes)} boxes.")
@@ -145,31 +152,64 @@ class spinner(basetap):
 
     def claim_spinner(self):
         url = "https://back.timboo.pro/api/upd-data"
+        claim_point = random.randint(10, 20)
+        if self.remain_hp <= 20:
+            claim_point = self.remain_hp
+
         payload = {
             "initData" : self.init_data_raw,
             "data" : {
-                "clicks" : int(self.remain_hp),
-                "isClose" : True
+                "clicks" : claim_point,
+                "isClose" : None
             }
         }
         try:
             res = requests.post(url, json=payload, proxies=self.proxy, headers=self.headers)
             data = res.json()
             if "updateData" in data and data["updateData"]:
-                self.bprint("Claim success full")
-                self.fix_spinner()
-                self.get_info()
+                self.bprint("Claim successful")
+                time.sleep(5)
+                self.remain_hp = self.remain_hp - claim_point
+                if self.remain_hp > 0:
+                    self.claim_spinner()
+                else:
+                    self.fix_spinner()
+                    self.get_info()
             else:
                 self.wait_time = 5
                 self.bprint("Try claim again in 5 seconds")
+                self.get_info()
         except Exception as e:
             self.bprint(e)
             self.bprint("Error happen")
+    
+    def try_upgrade(self):
+        url = "https://back.timboo.pro/api/upgrade-spinner"
+        payload = {
+            "initData" : self.init_data_raw,
+            "spinnerId" : self.spinner_id
+        }
+        try:
+            res = requests.post(url, headers= self.headers, json=payload, proxies=self.proxy)
+            if res.status_code == 200:
+                data = res.json()
+                if "message" in data and data["message"] == "The spinner is upgraded.":
+                    self.bprint("Upgrade spinner successfully")
+                    return True
+                else:
+                    self.bprint("Failed to upgrade spinner ")
+            else:
+                self.bprint(f"Failed to upgrade spinner, error: {res.status_code}")
+        except Exception as e:
+            self.bprint(f"Failed to upgrade spinner, error: {e}")
+        return False
 
     def claim(self):
         # obj.open_daily_box()
         self.get_info()
-        if self.remain_hp > 0:
+        while self.try_upgrade():
+            time.sleep(1)
+        if self.wait_time <= 0:
             self.claim_spinner()
         
 if __name__ == "__main__":

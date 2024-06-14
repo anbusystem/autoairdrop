@@ -89,6 +89,7 @@ class worker(threading.Thread):
 			try:
 				if self.validate_cline(cline):
 					ins = create_instances(import_one_module(modules, self.coin))
+					print(f"Creating instance for {self.coin}")
 					if "Proxy" in cline:
 						proxy = workerhelper.build_proxy(cline["Proxy"], cline["type"])
 					else:
