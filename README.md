@@ -21,7 +21,7 @@ For claiming supported coins using requests, you need to have python install on 
 
 ```bash
   cd autoairdrop
-  pip install requests
+  pip install -r requirements.txt
   python main.py config.json
 ```
 
