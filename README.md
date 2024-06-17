@@ -16,6 +16,8 @@ A simple application written in Python with requests library to achieve the smoo
 
 
 ## Installation
+Note: prebuilt binary for newbie available at: https://github.com/anbusystem/AutoAirdropClaimer/releases/download/v2.2/AutoClaimAirdrop.zip
+
 
 For claiming supported coins using requests, you need to have python install on the computer (or event a phone) and modify config.json with your actual data.
 
